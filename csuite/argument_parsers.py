@@ -4,28 +4,31 @@
 import argparse
 import logging
 
-from csuite.validators import validate_main_args as main_arg_validator
+from csuite.validators import validate_main_args, validate_output_args
 from cfoldseeker.main import parse_and_validate_arguments as cfs_arg_validator
 from cfoldseeker.build_cds_db import parse_and_validate_arguments as cfscds_arg_validator
-from cagecleaner.validators import parse_and_validate_arguments as ccl_validator
+from cagecleaner.validators import parse_and_validate_arguments as ccl_arg_validator
 
 from csuite.defaults import (cfoldseekerDefaultConfiguration,
                              cfoldseekerCDSDefaultConfiguration,
                              CAGEcleanerDefaultConfiguration,
-                             mainDefaultConfiguration)
+                             mainDefaultConfiguration,
+                             outputDefaultConfiguration)
+
 
 LOG = logging.getLogger(__name__)
 
 
-WORKFLOW_TOOLS = {'remote_structure': ['MAIN', 'CFS'],
-                  'local_structure': ['MAIN', 'CFSCDS', 'CFS'],
-                  'remote_structure_derep': ['MAIN', 'CFS', 'rCCL'],
-                  'local_structure_derep': ['MAIN', 'CFSCDS', 'CFS', 'lCCL'],
-                  'remote_sequence': ['MAIN', 'CBL'],
-                  'local_sequence': ['MAIN', 'CBLDB', 'CBL'],
-                  'remote_sequence_derep': ['MAIN', 'CBL', 'rCCL'],
-                  'local_sequence_derep': ['MAIN', 'CBLDB', 'CBL', 'lCCL'],
+WORKFLOW_TOOLS = {'remote_struc': ['MAIN', 'CFS'],
+                  'local_struc': ['MAIN', 'CFSCDS', 'CFS'],
+                  'remote_struc_derep': ['MAIN', 'CFS', 'rCCL'],
+                  'local_struc_derep': ['MAIN', 'CFSCDS', 'CFS', 'lCCL'],
+                  'remote_seq': ['MAIN', 'CBL'],
+                  'local_seq': ['MAIN', 'CBLDB', 'CBL'],
+                  'remote_seq_derep': ['MAIN', 'CBL', 'rCCL'],
+                  'local_seq_derep': ['MAIN', 'CBLDB', 'CBL', 'lCCL'],
                   'derep': ['MAIN', 'CCL'],
+                  'output': ['MAIN', 'OUT'],
                   }
 
 TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
@@ -33,14 +36,18 @@ TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
                       'CFSCDS': cfoldseekerCDSDefaultConfiguration(),
                       'lCCL': CAGEcleanerDefaultConfiguration(),
                       'rCCL': CAGEcleanerDefaultConfiguration(),
-                      'CCL': CAGEcleanerDefaultConfiguration()}
+                      'CCL': CAGEcleanerDefaultConfiguration(),
+                      'OUT': outputDefaultConfiguration(),
+                      }
 
-TOOL_ARG_VALIDATORS = {'MAIN': main_arg_validator,
+TOOL_ARG_VALIDATORS = {'MAIN': validate_main_args,
                        'CFS': lambda x: cfs_arg_validator(x, skip_csuite_IO_checks = True),
                        'CFSCDS': cfscds_arg_validator,
-                       'CCL': ccl_validator,
-                       'lCCL': lambda x: ccl_validator(x, bypass_source = 'local'),
-                       'rCCL': lambda x: ccl_validator(x, bypass_source = 'remote')}
+                       'CCL': ccl_arg_validator,
+                       'lCCL': lambda x: ccl_arg_validator(x, bypass_source = 'local'),
+                       'rCCL': lambda x: ccl_arg_validator(x, bypass_source = 'remote'),
+                       'OUT': validate_output_args,
+                       }
 
 
 def categorise_args(args: argparse.Namespace) -> dict[str:argparse.Namespace]:
@@ -67,5 +74,4 @@ def parse_and_validate_args(categorised_args: dict[str:argparse.Namespace]) -> d
         parsed_categorised_args[tool] = validator(categorised_args[tool])
         
     return parsed_categorised_args
-
 

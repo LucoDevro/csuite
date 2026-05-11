@@ -5,7 +5,12 @@ import argparse
 import logging
 import sys
 
-from csuite.cli_parsers import register_sequence_derep_subparser, register_local_structure_derep_subparser
+from csuite.cli_parsers import (register_local_struc_derep_subparser,
+                                register_local_struc_subparser,
+                                register_remote_struc_derep_subparser,
+                                register_remote_struc_subparser,
+                                register_derep_subparser,
+                                register_output_subparser)
 from csuite.argument_parsers import categorise_args
 from csuite.workflows import setup_workflow, run_workflow
 
@@ -37,29 +42,23 @@ def create_main_parser():
     
     subparsers = parser.add_subparsers(title = 'workflows', dest = 'command')
     
-    # sequence
-    # parser_sequence = subparsers.add_parser('sequence', help = "sequence-based search")
+    # local structure with dereplication
+    register_local_struc_derep_subparser(subparsers)
     
-    # sequence with dereplication
-    # parser_sequence_derep = subparsers.add_parser('sequence_derep', help = "sequence-based search with dereplication")
-    register_sequence_derep_subparser(subparsers)
+    # local structure
+    register_local_struc_subparser(subparsers)
     
-    # structure
-    # parser_structure = subparsers.add_parser('structure', help = "structure-based search")
+    # remote structure with dereplication
+    register_remote_struc_derep_subparser(subparsers)
     
-    # structure with dereplication
-    # parser_structure_derep = subparsers.add_parser('structure_derep', help = "structure-based search with dereplication")
-    register_local_structure_derep_subparser(subparsers)
+    # remote structure
+    register_remote_struc_subparser(subparsers)
     
-    # merge sessions
-    # parser_merge = subparsers.add_parser('merge', help = 'merge existing sessions')
+    # Dereplication only
+    register_derep_subparser(subparsers)
     
-    # dereplicate only
-    # parser_derep = subparsers.add_parser('dereplicate', help = 'dereplicate existing search')
-    
-    # generate output from a session
-    # parser_output = subparsers.add_parser('output', help = 'generate a supported output for an existing search')
-    
+    # Output generation only
+    register_output_subparser(subparsers)
     
     return parser
 

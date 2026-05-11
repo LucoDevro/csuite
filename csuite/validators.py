@@ -3,13 +3,14 @@
 
 import logging
 import tempfile
+import argparse
 from pathlib import Path
 
 
 LOG = logging.getLogger(__name__)
 
 
-def validate_main_args(args):
+def validate_main_args(args: argparse.Namespace) -> dict:
     # Output directory should not exist yet, unless flagged.
     try:
         args.output.mkdir(parents = True)
@@ -33,4 +34,15 @@ def validate_main_args(args):
     args.temp = Path(tempfile.mkdtemp(dir = args.temp))
     
     return vars(args)
+
+
+def validate_output_args(args: argparse.Namespace) -> dict:
+    # First validate main argument values
+    parsed_args = validate_main_args(args)
+        
+    # Session file should exist
+    if not parsed_args['session'].is_file():
+        raise FileNotFoundError("Session file not found!")
+        
+    return parsed_args
 

@@ -38,7 +38,7 @@ class cfoldseekerDefaultConfiguration():
         self.db = ['afdb50']
         self.taxfilters = ''
         self.mapping_table_path = Path('uniprot_kegg_genpept.gz')
-        self.max_workers = 1
+        self.max_workers = 2
         self.local_db_path = Path('local_db/local_db')
         self.cds_db_path = Path('local_cds_db.gz')
         self.seq_clusters = Path('cluster_clustered.tsv')
@@ -89,4 +89,15 @@ class mainDefaultConfiguration():
         self.output = Path('.')
         self.temp = Path(tempfile.gettempdir())
     
-    
+
+class outputDefaultConfiguration():
+    def __init__(self):
+        self.force = False
+        self.verbosity = 3
+        self.output = Path('.')
+        self.output_summary = True
+        self.output_binary = True
+        self.output_plot = True
+        self.output_clinker = True
+        
+        
