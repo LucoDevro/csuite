@@ -16,6 +16,18 @@ LOG = logging.getLogger(__name__)
 
 
 def register_local_struc_derep_subparser(subparsers):
+    """
+    Register the subparser for the local structure search with dereplication workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('local_struc_derep', add_help = False,
                                    help = "local structure-based search with dereplication")
     
@@ -101,6 +113,18 @@ def register_local_struc_derep_subparser(subparsers):
 
 
 def register_local_struc_subparser(subparsers):
+    """
+    Register the subparser for the local structure search workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('local_struc', add_help = False,
                                    help = "local structure-based search")
     
@@ -168,6 +192,18 @@ def register_local_struc_subparser(subparsers):
 
 
 def register_remote_struc_derep_subparser(subparsers):
+    """
+    Register the subparser for the remote structure search with dereplication workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('remote_struc_derep', add_help = False,
                                    help = "remote structure-based search with dereplication")
     
@@ -246,6 +282,18 @@ def register_remote_struc_derep_subparser(subparsers):
 
 
 def register_remote_struc_subparser(subparsers):
+    """
+    Register the subparser for the remote structure search workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('remote_struc', add_help = False,
                                    help = "remote structure-based search")
     
@@ -308,86 +356,19 @@ def register_remote_struc_subparser(subparsers):
     return None
 
 
-def register_derep_subparser(subparsers):
-    parser = subparsers.add_parser('derep', add_help = False,
-                                   help = "dereplication")
-    
-    args_general = parser.add_argument_group('General')
-    args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores',
-                              default = 1, type = int, 
-                              help = "Number of cores available to use (default: 1).")    
-    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
-                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
-    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
-                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
-    args_general.add_argument('-np', '--no-progress', dest = "MAIN$no_progress",
-                              default = False, action = 'store_true', help = "Hide most progress bars (default: False).")
-    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
-    
-    args_io = parser.add_argument_group('File inputs and outputs')
-    args_io.add_argument('-s', '--session', dest = "CCL$session", metavar = "session",
-                         type = Path, required = True,
-                         help = "Path to cblaster session (either obtained from a search run or from cagecleaner-generate-session).")
-    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
-                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
-    args_io.add_argument('-g', '--genomes', dest = "CCL$genome_dir", metavar = 'genome_dir',
-                         type = Path, default = '.', 
-                         help = "[Only relevant for local searches] Path to local genome folder containing genome files. Accepted formats are FASTA and Genbank [.fasta; .fna; .fa; .gbff; .gbk; .gb]. Files can be gzipped. (default: current working directory)")
-    args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
-    args_io.add_argument('--keep_temp_derep', dest = "CCL$keep_intermediate",
-                         default = False, action = "store_true", help = "Keep all temporary dereplication data.")
-    
-    args_dereplication = parser.add_argument_group('Dereplication options')
-    args_dereplication.add_argument('--method', dest = 'CCL$method', metavar = 'method',
-                                    default = "genomes", choices = ['genomes', 'regions'], type = str, 
-                                    help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
-    args_dereplication.add_argument('-i', '--identity', dest = 'CCL$identity', metavar = 'identity',
-                                    default = 99.0, type = float, help = "Identity dereplication cutoff (default: 99.0)")
-    args_dereplication.add_argument('-c', '--coverage', dest = 'CCL$coverage', metavar = 'coverage',
-                                    default = 80.0, type = float, help = "Coverage dereplication cutoff (default: 80.0)")
-    
-    args_region_dereplication = parser.add_argument_group('Region-based-specific dereplication options')
-    args_region_dereplication.add_argument('-m', '--margin', dest = 'CCL$margin', metavar = 'margin',
-                                           default = 0, type = int, help = "Sequence margin at both sides of the cluster in bp. Required in case of region-based dereplication. (default: 0)")
-    
-    return None
-
-
-def register_output_subparser(subparsers):
-    parser = subparsers.add_parser('output', add_help = False,
-                                   help = "make plots for an existing session")
-    
-    args_general = parser.add_argument_group('General')
-    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
-                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
-    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
-                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
-    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
-    
-    args_io = parser.add_argument_group('File inputs and outputs')
-    args_io.add_argument('-s', '--session', dest = "OUT$session", metavar = "session",
-                         type = Path, required = True,
-                         help = "Path to cblaster session (either obtained from a search run or from cagecleaner-generate-session).")
-    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
-                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
-    args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
-    
-    args_outputs = parser.add_argument_group('Output types')
-    args_outputs.add_argument('--summary', dest = 'OUT$output_summary',
-                              default = True, action = 'store_false', help = "Write cblaster summary file (default: True).")
-    args_outputs.add_argument('--binary', dest = 'OUT$output_binary',
-                              default = True, action = 'store_false', help = "Write cblaster binary file (tab-separated) (default: True).")
-    args_outputs.add_argument('--plot', dest = 'OUT$output_plot',
-                              default = True, action = 'store_false', help = "Write cblaster clusterplot file (default: True).")
-    args_outputs.add_argument('--clinker', dest = 'OUT$output_clinker',
-                              default = True, action = 'store_false', help = "Write clinker plot file (default: True).")
-    
-    return None
-
-
 def register_remote_seq_subparser(subparsers):
+    """
+    Register the subparser for the remote sequence search workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('remote_seq', add_help = False,
                                    help = "remote sequence-based search")
     
@@ -433,6 +414,18 @@ def register_remote_seq_subparser(subparsers):
 
 
 def register_local_seq_subparser(subparsers):
+    """
+    Register the subparser for the local sequence search workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('local_seq', add_help = False,
                                    help = "local sequence-based search")
     
@@ -475,6 +468,18 @@ def register_local_seq_subparser(subparsers):
 
 
 def register_local_seq_derep_subparser(subparsers):
+    """
+    Register the subparser for the local sequence search with dereplication workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('local_seq_derep', add_help = False,
                                    help = "local sequence-based search with dereplication")
     
@@ -536,6 +541,18 @@ def register_local_seq_derep_subparser(subparsers):
 
 
 def register_remote_seq_derep_subparser(subparsers):
+    """
+    Register the subparser for the remote sequence search with dereplication workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
     parser = subparsers.add_parser('remote_seq_derep', add_help = False,
                                    help = "remote sequence-based search with dereplication")
     
@@ -595,6 +612,109 @@ def register_remote_seq_derep_subparser(subparsers):
     args_region_dereplication = parser.add_argument_group('Region-based-specific dereplication options')
     args_region_dereplication.add_argument('-m', '--margin', dest = 'rCCL$margin', metavar = 'margin',
                                            default = 0, type = int, help = "Sequence margin at both sides of the cluster in bp. Required in case of region-based dereplication. (default: 0)")
+    
+    return None
+
+
+def register_derep_subparser(subparsers):
+    """
+    Register the subparser for the dereplication workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
+    parser = subparsers.add_parser('derep', add_help = False,
+                                   help = "dereplication")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores',
+                              default = 1, type = int, 
+                              help = "Number of cores available to use (default: 1).")    
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
+    args_general.add_argument('-np', '--no-progress', dest = "MAIN$no_progress",
+                              default = False, action = 'store_true', help = "Hide most progress bars (default: False).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-s', '--session', dest = "CCL$session", metavar = "session",
+                         type = Path, required = True,
+                         help = "Path to cblaster session (either obtained from a search run or from cagecleaner-generate-session).")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
+                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
+    args_io.add_argument('-g', '--genomes', dest = "CCL$genome_dir", metavar = 'genome_dir',
+                         type = Path, default = '.', 
+                         help = "[Only relevant for local searches] Path to local genome folder containing genome files. Accepted formats are FASTA and Genbank [.fasta; .fna; .fa; .gbff; .gbk; .gb]. Files can be gzipped. (default: current working directory)")
+    args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
+                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+    args_io.add_argument('--keep_temp_derep', dest = "CCL$keep_intermediate",
+                         default = False, action = "store_true", help = "Keep all temporary dereplication data.")
+    
+    args_dereplication = parser.add_argument_group('Dereplication options')
+    args_dereplication.add_argument('--method', dest = 'CCL$method', metavar = 'method',
+                                    default = "genomes", choices = ['genomes', 'regions'], type = str, 
+                                    help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
+    args_dereplication.add_argument('-i', '--identity', dest = 'CCL$identity', metavar = 'identity',
+                                    default = 99.0, type = float, help = "Identity dereplication cutoff (default: 99.0)")
+    args_dereplication.add_argument('-c', '--coverage', dest = 'CCL$coverage', metavar = 'coverage',
+                                    default = 80.0, type = float, help = "Coverage dereplication cutoff (default: 80.0)")
+    
+    args_region_dereplication = parser.add_argument_group('Region-based-specific dereplication options')
+    args_region_dereplication.add_argument('-m', '--margin', dest = 'CCL$margin', metavar = 'margin',
+                                           default = 0, type = int, help = "Sequence margin at both sides of the cluster in bp. Required in case of region-based dereplication. (default: 0)")
+    
+    return None
+
+
+def register_output_subparser(subparsers):
+    """
+    Register the subparser for the output generation workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
+    parser = subparsers.add_parser('output', add_help = False,
+                                   help = "make plots for an existing session")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-s', '--session', dest = "OUT$session", metavar = "session",
+                         type = Path, required = True,
+                         help = "Path to cblaster session (either obtained from a search run or from cagecleaner-generate-session).")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
+                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
+    args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
+                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+    
+    args_outputs = parser.add_argument_group('Output types')
+    args_outputs.add_argument('--summary', dest = 'OUT$output_summary',
+                              default = True, action = 'store_false', help = "Write cblaster summary file (default: True).")
+    args_outputs.add_argument('--binary', dest = 'OUT$output_binary',
+                              default = True, action = 'store_false', help = "Write cblaster binary file (tab-separated) (default: True).")
+    args_outputs.add_argument('--plot', dest = 'OUT$output_plot',
+                              default = True, action = 'store_false', help = "Write cblaster clusterplot file (default: True).")
+    args_outputs.add_argument('--clinker', dest = 'OUT$output_clinker',
+                              default = True, action = 'store_false', help = "Write clinker plot file (default: True).")
     
     return None
 

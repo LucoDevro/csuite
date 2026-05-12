@@ -34,6 +34,17 @@ LOG = logging.getLogger(__name__)
 
 
 def create_main_parser():
+    """
+    Create the main CLI parser.
+    
+    Defines the root csuite CLI, and defines the subparsers for each workflow.
+    
+    Returns:
+        parser (argparse.ArgumentParser): Parser object with every subcommand registered and defined.
+        
+    Note:
+        Subcommand parsers are defined in the cli_parsers module.
+    """
     parser = argparse.ArgumentParser(
         prog = 'csuite',
                 epilog = 
@@ -91,14 +102,13 @@ def setup_logging(verbosity: int) -> None:
     """
     Set up the root logger, overruling any previously set config.
     
+    Forces a new basicConfig with an updated verbosity level
+    
     Args:
         verbosity (int): Verbosity level (choices: 0,1,2,3,4).
         
     Returns:
         None
-        
-    Note:
-        Forces a new basicConfig with an updated verbosity level
     """
     log_levels = {0: logging.CRITICAL,
                   1: logging.ERROR,
@@ -119,7 +129,7 @@ def setup_logging(verbosity: int) -> None:
 
 
 def main():
-    # Parse args
+    # Collect args
     parser = create_main_parser()
     args = parser.parse_args()
     workflow_name = args.command

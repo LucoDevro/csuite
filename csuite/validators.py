@@ -14,6 +14,15 @@ LOG = logging.getLogger(__name__)
 
 
 def validate_main_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the main shared arguments.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs
+    """
     # Output directory should not exist yet, unless flagged.
     try:
         args.output.mkdir(parents = True)
@@ -36,10 +45,20 @@ def validate_main_args(args: argparse.Namespace) -> dict:
                 raise err
     args.temp = Path(tempfile.mkdtemp(dir = args.temp))
     
+    # Parse and return
     return vars(args)
 
 
 def validate_output_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the arguments of the output generation module.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs
+    """
     # First validate main argument values
     parsed_args = validate_main_args(args)
         
@@ -47,10 +66,20 @@ def validate_output_args(args: argparse.Namespace) -> dict:
     if not parsed_args['session'].is_file():
         raise FileNotFoundError("Session file not found!")
         
+    # Parse and return
     return parsed_args
 
 
 def validate_cblaster_search_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the arguments of the cblaster search module.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs
+    """
     # Set filepaths temporarily
     query_file = Path(args.query_file)
     session_file = Path(args.session_file[0])
@@ -116,10 +145,20 @@ def validate_cblaster_search_args(args: argparse.Namespace) -> dict:
             LOG.error(msg)
             raise FileExistsError(msg)
             
+    # Parse and return
     return vars(args)
 
 
 def validate_cblaster_makedb_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the arguments of the cblaster makedb module.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs
+    """
     if not(args.cpus > 0):
         raise ValueError('Number of cores must be strictly positive.')
     
@@ -133,7 +172,8 @@ def validate_cblaster_makedb_args(args: argparse.Namespace) -> dict:
             msg = 'Output folder already exists! Rerun with -f to overwrite it.'
             LOG.error(msg)
             raise err
-            
+    
+    # Parse and return
     return vars(args)
 
 

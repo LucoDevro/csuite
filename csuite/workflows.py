@@ -25,6 +25,23 @@ LOG = logging.getLogger(__name__)
 
 
 def setup_workflow(workflow_name: str, categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Setup the selected workflow.
+    
+    Main workflow setup function that selects the right workflow setup function from the workflow keyword,
+    and runs it to get parsed and validated argument values ready to pass on the workflow runner.
+    
+    Args:
+        workflow_name (str): name of the selected workflow
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+    
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     match workflow_name:
         case "local_struc_derep":
             setup = setup_local_struc_derep
@@ -55,7 +72,21 @@ def setup_workflow(workflow_name: str, categorised_args: dict[argparse.Namespace
 
 
 def setup_local_struc_derep(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a local structure search with dereplication workflow.
     
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+            
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     cfs_args = categorised_args['CFS']
@@ -97,7 +128,21 @@ def setup_local_struc_derep(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_remote_struc_derep(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a remote structure search with dereplication workflow.
     
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     cfs_args = categorised_args['CFS']
@@ -131,7 +176,21 @@ def setup_remote_struc_derep(categorised_args: dict[argparse.Namespace]) -> dict
 
 
 def setup_local_struc(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a local structure search workflow.
     
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     cfs_args = categorised_args['CFS']
@@ -163,7 +222,21 @@ def setup_local_struc(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_remote_struc(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a remote structure search workflow.
     
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     cfs_args = categorised_args['CFS']
@@ -187,6 +260,21 @@ def setup_remote_struc(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a local sequence search with dereplication workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
                         '.gb', '.gbk', '.gb.gz', '.gbk.gz',
                         '.gff', '.gff3', '.gff.gz', '.gff3.gz')
@@ -241,6 +329,21 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_remote_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a remote sequence search with dereplication workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     cbl_args = categorised_args['CBL']
@@ -274,6 +377,21 @@ def setup_remote_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a local sequence search workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
                         '.gb', '.gbk', '.gb.gz', '.gbk.gz',
                         '.gff', '.gff3', '.gff.gz', '.gff3.gz')
@@ -315,6 +433,21 @@ def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_remote_seq(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a remote sequence search workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     cbl_args = categorised_args['CBL']
@@ -337,6 +470,21 @@ def setup_remote_seq(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_derep(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a dereplication workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     ccl_args = categorised_args['CCL']
@@ -359,6 +507,21 @@ def setup_derep(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_output(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up an output generation workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
     out_args = categorised_args['OUT']
@@ -379,6 +542,18 @@ def setup_output(categorised_args: dict[argparse.Namespace]) -> dict:
     
 
 def run_workflow(workflow_name: str, parsed_args: dict) -> None:
+    """
+    Run the workflow using the prepared arguments.
+    
+    Main workflow runner function that calls the runner selected from the workflow keyword.
+    
+    Args:
+        workflow_name (str): Name of the selected workflow.
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+            
+    Returns:
+        None
+    """
     match workflow_name:
         case 'local_struc_derep':
             run = run_local_struc_derep_workflow
@@ -407,6 +582,17 @@ def run_workflow(workflow_name: str, parsed_args: dict) -> None:
 
 
 def run_local_struc_derep_workflow(parsed_args: dict) -> None:
+    """
+    Run the local structure search with dereplication workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
     # Build CDS DB
     cfscds_workflow(parsed_args['CFSCDS'])
     
@@ -429,6 +615,17 @@ def run_local_struc_derep_workflow(parsed_args: dict) -> None:
 
 
 def run_remote_struc_derep_workflow(parsed_args: dict) -> None:
+    """
+    Run the remote structure search with dereplication workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
     # Run cfoldseeker
     cfs_workflow(parsed_args['CFS'])
     
@@ -448,6 +645,17 @@ def run_remote_struc_derep_workflow(parsed_args: dict) -> None:
 
 
 def run_local_struc_workflow(parsed_args: dict) -> None:
+    """
+    Run the local structure search workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
     # Build CDS DB
     cfscds_workflow(parsed_args['CFSCDS'])
     
@@ -458,13 +666,165 @@ def run_local_struc_workflow(parsed_args: dict) -> None:
 
 
 def run_remote_struc_workflow(parsed_args: dict) -> None:
+    """
+    Run the remote structure search workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
     # Run cfoldseeker
     cfs_workflow(parsed_args['CFS'])
     
     return None
 
 
+def run_remote_seq_workflow(parsed_args: dict) -> None:
+    """
+    Run the remote sequence search workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
+    cbl_args = parsed_args['CBL']
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # Run cblaster search
+    cblaster(**filtered_args)
+    
+    return None
+    
+    
+def run_local_seq_workflow(parsed_args: dict) -> None:
+    """
+    Run the local sequence search workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
+    cbl_args = parsed_args['CBL']
+    cbldb_args = parsed_args['CBLDB']
+    
+    # cblaster makedb
+    makedb(**cbldb_args)
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_cbl_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # cblaster search
+    cblaster(**filtered_cbl_args)
+    
+    return None
+
+
+def run_local_seq_derep_workflow(parsed_args: dict) -> None:
+    """
+    Run the local sequence search with dereplication workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
+    cbl_args = parsed_args['CBL']
+    cbldb_args = parsed_args['CBLDB']
+    lccl_args = parsed_args['lCCL']
+    
+    # cblaster makedb
+    makedb(**cbldb_args)
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_cbl_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # cblaster search
+    cblaster(**filtered_cbl_args)
+    
+    # Run CAGEcleaner in local mode
+    lccl_method = lccl_args['method']
+    match lccl_method:
+        case 'genomes':
+            ccl_run = LocalGenomeRun(lccl_args)
+        case 'regions':
+            ccl_run = LocalRegionRun(lccl_args)
+        case _:
+            raise ValueError('Invalid local CAGEcleaner mode!')
+    
+    ccl_run.run()
+    
+    return None
+
+
+def run_remote_seq_derep_workflow(parsed_args: dict) -> None:
+    """
+    Run the remote sequence search with dereplication workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
+    cbl_args = parsed_args['CBL']
+    rccl_args = parsed_args['rCCL']
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # Run cblaster search
+    cblaster(**filtered_args)
+    
+    # Run CAGEcleaner in local mode
+    rccl_method = rccl_args['method']
+    match rccl_method:
+        case 'genomes':
+            ccl_run = RemoteGenomeRun(rccl_args)
+        case 'regions':
+            ccl_run = RemoteRegionRun(rccl_args)
+        case _:
+            raise ValueError('Invalid local CAGEcleaner mode!')
+    
+    ccl_run.run()
+    
+    return None
+
+
 def run_derep_workflow(parsed_args: dict) -> None:
+    """
+    Run the dereplication workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
     ccl_args = parsed_args['CCL']
     
     # Run CAGEcleaner
@@ -491,6 +851,17 @@ def run_derep_workflow(parsed_args: dict) -> None:
 
 
 def run_output_workflow(parsed_args: dict) -> None:
+    """
+    Run the output generation workflow.
+    
+    Distributes the ready-to-use arguments over the appropriate tools and runs them in the right order.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+        
+    Returns:
+        None
+    """
     out_args = parsed_args['OUT']
     
     LOG.info("Reading cblaster session")
@@ -525,90 +896,4 @@ def run_output_workflow(parsed_args: dict) -> None:
         LOG.debug(f'clinker plot written at {str(path)}')
         
         return None
-
-
-def run_remote_seq_workflow(parsed_args: dict) -> None:
-    cbl_args = parsed_args['CBL']
-    
-    # Get the arguments we need for cblaster search
-    cbl_func_sig = inspect.signature(cblaster)
-    filtered_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
-    
-    # Run cblaster search
-    cblaster(**filtered_args)
-    
-    return None
-    
-    
-def run_local_seq_workflow(parsed_args: dict) -> None:
-    cbl_args = parsed_args['CBL']
-    cbldb_args = parsed_args['CBLDB']
-    
-    # cblaster makedb
-    makedb(**cbldb_args)
-    
-    # Get the arguments we need for cblaster search
-    cbl_func_sig = inspect.signature(cblaster)
-    filtered_cbl_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
-    
-    # cblaster search
-    cblaster(**filtered_cbl_args)
-    
-    return None
-
-
-def run_local_seq_derep_workflow(parsed_args: dict) -> None:
-    cbl_args = parsed_args['CBL']
-    cbldb_args = parsed_args['CBLDB']
-    lccl_args = parsed_args['lCCL']
-    
-    # cblaster makedb
-    makedb(**cbldb_args)
-    
-    # Get the arguments we need for cblaster search
-    cbl_func_sig = inspect.signature(cblaster)
-    filtered_cbl_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
-    
-    # cblaster search
-    cblaster(**filtered_cbl_args)
-    
-    # Run CAGEcleaner in local mode
-    lccl_method = lccl_args['method']
-    match lccl_method:
-        case 'genomes':
-            ccl_run = LocalGenomeRun(lccl_args)
-        case 'regions':
-            ccl_run = LocalRegionRun(lccl_args)
-        case _:
-            raise ValueError('Invalid local CAGEcleaner mode!')
-    
-    ccl_run.run()
-    
-    return None
-
-
-def run_remote_seq_derep_workflow(parsed_args: dict) -> None:
-    cbl_args = parsed_args['CBL']
-    rccl_args = parsed_args['rCCL']
-    
-    # Get the arguments we need for cblaster search
-    cbl_func_sig = inspect.signature(cblaster)
-    filtered_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
-    
-    # Run cblaster search
-    cblaster(**filtered_args)
-    
-    # Run CAGEcleaner in local mode
-    rccl_method = rccl_args['method']
-    match rccl_method:
-        case 'genomes':
-            ccl_run = RemoteGenomeRun(rccl_args)
-        case 'regions':
-            ccl_run = RemoteRegionRun(rccl_args)
-        case _:
-            raise ValueError('Invalid local CAGEcleaner mode!')
-    
-    ccl_run.run()
-    
-    return None
 

@@ -10,6 +10,9 @@ LOG = logging.getLogger(__name__)
 
 
 class cfoldseekerDefaultConfiguration():
+    """
+    Data class for the default argument values of cfoldseeker.
+    """
     def __init__(self):
         self.mode = 'remote'
         self.cores = 1
@@ -45,6 +48,9 @@ class cfoldseekerDefaultConfiguration():
         
 
 class cfoldseekerCDSDefaultConfiguration():
+    """
+    Data class for the default argument values of cfoldseeker-cds.
+    """
     def __init__(self):
         self.input = Path('.')
         self.output = Path('local_db')
@@ -56,6 +62,9 @@ class cfoldseekerCDSDefaultConfiguration():
         
 
 class CAGEcleanerDefaultConfiguration():
+    """
+    Data class for the default argument values of CAGEcleaner.
+    """
     def __init__(self):
         self.cores = 1
         self.force = False
@@ -85,12 +94,18 @@ class CAGEcleanerDefaultConfiguration():
         
         
 class mainDefaultConfiguration():
+    """
+    Data class for the default argument values of the csuite main entry point.
+    """
     def __init__(self):
         self.output = Path('.')
         self.temp = Path(tempfile.gettempdir())
     
 
 class outputDefaultConfiguration():
+    """
+    Data class for the default argument values of the output generation module.
+    """
     def __init__(self):
         self.force = False
         self.verbosity = 3
@@ -102,6 +117,9 @@ class outputDefaultConfiguration():
         
         
 class cblasterSearchDefaultConfiguration():
+    """
+    Data class for the default argument values of cblaster-search.
+    """
     def __init__(self):
         self.query_file = None
         self.query_ids = None
@@ -147,6 +165,9 @@ class cblasterSearchDefaultConfiguration():
         
 
 class cblasterMakedbDefaultConfiguration():
+    """
+    Data class for the default argument values of cblaster-makedb.
+    """
     def __init__(self):
         self.paths = []
         self.database = 'local_db'
