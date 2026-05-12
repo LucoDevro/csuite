@@ -4,20 +4,32 @@
 import argparse
 import logging
 import sys
+from importlib.metadata import version
 
 from csuite.cli_parsers import (register_local_struc_derep_subparser,
                                 register_local_struc_subparser,
                                 register_remote_struc_derep_subparser,
                                 register_remote_struc_subparser,
                                 register_derep_subparser,
-                                register_output_subparser)
+                                register_output_subparser,
+                                register_remote_seq_subparser,
+                                register_remote_seq_derep_subparser,
+                                register_local_seq_subparser,
+                                register_local_seq_derep_subparser,
+                                )
 from csuite.argument_parsers import categorise_args
 from csuite.workflows import setup_workflow, run_workflow
 
 
-__version__ = "0.0.0"
+__version__ = version('csuite')
 
-
+# Setup default logger configuration
+logging.basicConfig(
+    level = logging.INFO,
+    format = "[%(asctime)s] %(levelname)s [%(name)s: %(funcName)s] - %(message)s",
+    datefmt="%H:%M:%S",
+    handlers = [logging.StreamHandler(sys.stdout)],
+    )
 LOG = logging.getLogger(__name__)
 
 
@@ -54,10 +66,22 @@ def create_main_parser():
     # remote structure
     register_remote_struc_subparser(subparsers)
     
-    # Dereplication only
+    # local sequence
+    register_local_seq_subparser(subparsers)
+    
+    # local sequence with dereplication
+    register_local_seq_derep_subparser(subparsers)
+    
+    # remote sequence
+    register_remote_seq_subparser(subparsers)
+    
+    # remote sequence with dereplication
+    register_remote_seq_derep_subparser(subparsers)
+    
+    # dereplication only
     register_derep_subparser(subparsers)
     
-    # Output generation only
+    # output generation only
     register_output_subparser(subparsers)
     
     return parser
@@ -65,13 +89,16 @@ def create_main_parser():
 
 def setup_logging(verbosity: int) -> None:
     """
-    Set up the root logger.
+    Set up the root logger, overruling any previously set config.
     
     Args:
         verbosity (int): Verbosity level (choices: 0,1,2,3,4).
         
     Returns:
         None
+        
+    Note:
+        Forces a new basicConfig with an updated verbosity level
     """
     log_levels = {0: logging.CRITICAL,
                   1: logging.ERROR,
@@ -84,7 +111,8 @@ def setup_logging(verbosity: int) -> None:
         level = log_levels[verbosity],
         format = "[%(asctime)s] %(levelname)s [%(name)s: %(funcName)s] - %(message)s",
         datefmt="%H:%M:%S",
-        handlers = [logging.StreamHandler(sys.stdout)]
+        handlers = [logging.StreamHandler(sys.stdout)],
+        force = True,
         )
     
     return None
@@ -99,8 +127,9 @@ def main():
     # Categorise them by tool
     categorised_args = categorise_args(args)
     
-    # Set up logging
-    setup_logging(categorised_args['MAIN'].verbosity)
+    # Reconfigure logger with parsed verbosity level
+    verbosity = getattr(categorised_args['MAIN'], 'verbosity', 3)
+    setup_logging(verbosity)
     
     # Set up the workflow by setting the right I/O arguments
     # Validate arguments on-the-fly, catching and ignoring non-existing 

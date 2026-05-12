@@ -3,6 +3,9 @@
 
 import argparse
 import logging
+import inspect
+import os
+from pathlib import Path
 
 from csuite.argument_parsers import parse_and_validate_args
 from cfoldseeker.build_cds_db import run_workflow as cfscds_workflow
@@ -14,6 +17,8 @@ from cagecleaner.remote_region_run import RemoteRegionRun
 from cblaster.classes import Session
 from cblaster.plot import plot_session
 from cblaster.plot_clusters import plot_clusters
+from cblaster.main import cblaster
+from cblaster.database import makedb
 
 
 LOG = logging.getLogger(__name__)
@@ -182,19 +187,153 @@ def setup_remote_struc(categorised_args: dict[argparse.Namespace]) -> dict:
 
 
 def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
-    pass
+    allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
+                        '.gb', '.gbk', '.gb.gz', '.gbk.gz',
+                        '.gff', '.gff3', '.gff.gz', '.gff3.gz')
+    
+    ## First connect the I/O arguments of the several tools
+    main_args = categorised_args['MAIN']
+    cbl_args = categorised_args['CBL']
+    cbldb_args = categorised_args['CBLDB']
+    lccl_args = categorised_args['lCCL']
+    
+    main_temp_folder = main_args.temp
+    main_output_folder = main_args.output
+    cblaster_output_folder = main_output_folder / 'cblaster'
+    cbldb_db_prefix = main_output_folder / 'cblaster_makedb' / 'local_db'
+    
+    # cblaster makedb
+    # catch a FileNotFoundError if the genome folder does not exist; cannot be postponed until validation time
+    try:
+        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if p.suffix in allowed_suffices]
+    except FileNotFoundError:
+        msg = f'Genome folder not found: {cbldb_args.paths}'
+        LOG.critical(msg)
+        raise FileNotFoundError(msg)
+    cbldb_args.database = str(cbldb_db_prefix)
+    cbldb_args.force = main_args.force
+    cbldb_args.cpus = main_args.cores
+    
+    # cblaster search
+    cbl_args.mode = 'local'
+    cbl_args.cpus = main_args.cores
+    cbl_args.force = main_args.force
+    cbl_args.output = os.devnull
+    cbl_args.query_file = str(cbl_args.query_file)
+    cbl_args.session_file = [str(cblaster_output_folder / 'session.json')]
+    cbl_args.blast_file = str(cblaster_output_folder / 'blast.txt')
+    cbl_args.databases = [str(cbldb_db_prefix.with_suffix('.dmnd'))]
+    
+    # CAGEcleaner
+    lccl_args.session = Path(cbl_args.session_file[0])
+    lccl_args.output = main_output_folder / 'cagecleaner'
+    lccl_args.temp = main_temp_folder
+    lccl_args.genome_dir = Path(cbldb_args.paths[0]).parent
+    lccl_args.cores = main_args.cores
+    lccl_args.force = main_args.force
+    lccl_args.verbosity = main_args.verbosity
+    lccl_args.no_progress = main_args.no_progress
+    
+    ## Then parse and validate the argument values
+    parsed_args = parse_and_validate_args(categorised_args)
+    
+    return parsed_args
 
 
 def setup_remote_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
-    pass
+    ## First connect the I/O arguments of the several tools
+    main_args = categorised_args['MAIN']
+    cbl_args = categorised_args['CBL']
+    rccl_args = categorised_args['rCCL']
+    
+    main_output_folder = main_args.output / 'cblaster'
+    main_temp_folder = main_args.temp
+    
+    # cblaster search
+    cbl_args.mode = 'remote'
+    cbl_args.cpus = main_args.cores
+    cbl_args.force = main_args.force
+    cbl_args.output = os.devnull
+    cbl_args.query_file = str(cbl_args.query_file)
+    cbl_args.session_file = [str(main_output_folder / 'session.json')]
+    cbl_args.blast_file = str(main_output_folder / 'blast.txt')
+    
+    # CAGEcleaner
+    rccl_args.session = Path(cbl_args.session_file[0])
+    rccl_args.output = main_output_folder / 'cagecleaner'
+    rccl_args.temp = main_temp_folder
+    rccl_args.cores = main_args.cores
+    rccl_args.force = main_args.force
+    rccl_args.verbosity = main_args.verbosity
+    rccl_args.no_progress = main_args.no_progress
+    
+    ## Then parse and validate the argument values
+    parsed_args = parse_and_validate_args(categorised_args)
+    
+    return parsed_args
 
 
 def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
-    pass
+    allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
+                        '.gb', '.gbk', '.gb.gz', '.gbk.gz',
+                        '.gff', '.gff3', '.gff.gz', '.gff3.gz')
+    
+    ## First connect the I/O arguments of the several tools
+    main_args = categorised_args['MAIN']
+    cbl_args = categorised_args['CBL']
+    cbldb_args = categorised_args['CBLDB']
+    
+    main_output_folder = main_args.output / 'cblaster'
+    cbldb_db_prefix = main_args.output / 'cblaster_makedb' / 'local_db'
+    
+    # cblaster makedb
+    # catch a FileNotFoundError if genome folder does not exist; cannot be postponed until validation time
+    try:
+        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if p.suffix in allowed_suffices]
+    except FileNotFoundError:
+        msg = f'Genome folder not found: {cbldb_args.paths}'
+        LOG.critical(msg)
+        raise FileNotFoundError(msg)
+    cbldb_args.database = str(cbldb_db_prefix)
+    cbldb_args.force = main_args.force
+    cbldb_args.cpus = main_args.cores
+    
+    # cblaster search
+    cbl_args.mode = 'local'
+    cbl_args.cpus = main_args.cores
+    cbl_args.force = main_args.force
+    cbl_args.output = os.devnull
+    cbl_args.query_file = str(cbl_args.query_file)
+    cbl_args.session_file = [str(main_output_folder / 'session.json')]
+    cbl_args.blast_file = str(main_output_folder / 'blast.txt')
+    cbl_args.databases = [str(cbldb_db_prefix.with_suffix('.dmnd'))]
+    
+    ## Then parse and validate the argument values
+    parsed_args = parse_and_validate_args(categorised_args)
+    
+    return parsed_args
 
 
 def setup_remote_seq(categorised_args: dict[argparse.Namespace]) -> dict:
-    pass
+    ## First connect the I/O arguments of the several tools
+    main_args = categorised_args['MAIN']
+    cbl_args = categorised_args['CBL']
+    
+    main_output_folder = main_args.output / 'cblaster'
+    
+    # cblaster search
+    cbl_args.mode = 'remote'
+    cbl_args.cpus = main_args.cores
+    cbl_args.force = main_args.force
+    cbl_args.output = os.devnull
+    cbl_args.query_file = str(cbl_args.query_file)
+    cbl_args.session_file = [str(main_output_folder / 'session.json')]
+    cbl_args.blast_file = str(main_output_folder / 'blast.txt')
+    
+    ## Then parse and validate the argument values
+    parsed_args = parse_and_validate_args(categorised_args)
+    
+    return parsed_args
 
 
 def setup_derep(categorised_args: dict[argparse.Namespace]) -> dict:
@@ -253,6 +392,14 @@ def run_workflow(workflow_name: str, parsed_args: dict) -> None:
             run = run_derep_workflow
         case 'output':
             run = run_output_workflow
+        case 'remote_seq':
+            run = run_remote_seq_workflow
+        case 'remote_seq_derep':
+            run = run_remote_seq_derep_workflow
+        case 'local_seq':
+            run = run_local_seq_workflow
+        case 'local_seq_derep':
+            run = run_local_seq_derep_workflow
         case _:
             raise ValueError('Unknown workflow name!')
         
@@ -378,4 +525,90 @@ def run_output_workflow(parsed_args: dict) -> None:
         LOG.debug(f'clinker plot written at {str(path)}')
         
         return None
+
+
+def run_remote_seq_workflow(parsed_args: dict) -> None:
+    cbl_args = parsed_args['CBL']
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # Run cblaster search
+    cblaster(**filtered_args)
+    
+    return None
+    
+    
+def run_local_seq_workflow(parsed_args: dict) -> None:
+    cbl_args = parsed_args['CBL']
+    cbldb_args = parsed_args['CBLDB']
+    
+    # cblaster makedb
+    makedb(**cbldb_args)
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_cbl_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # cblaster search
+    cblaster(**filtered_cbl_args)
+    
+    return None
+
+
+def run_local_seq_derep_workflow(parsed_args: dict) -> None:
+    cbl_args = parsed_args['CBL']
+    cbldb_args = parsed_args['CBLDB']
+    lccl_args = parsed_args['lCCL']
+    
+    # cblaster makedb
+    makedb(**cbldb_args)
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_cbl_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # cblaster search
+    cblaster(**filtered_cbl_args)
+    
+    # Run CAGEcleaner in local mode
+    lccl_method = lccl_args['method']
+    match lccl_method:
+        case 'genomes':
+            ccl_run = LocalGenomeRun(lccl_args)
+        case 'regions':
+            ccl_run = LocalRegionRun(lccl_args)
+        case _:
+            raise ValueError('Invalid local CAGEcleaner mode!')
+    
+    ccl_run.run()
+    
+    return None
+
+
+def run_remote_seq_derep_workflow(parsed_args: dict) -> None:
+    cbl_args = parsed_args['CBL']
+    rccl_args = parsed_args['rCCL']
+    
+    # Get the arguments we need for cblaster search
+    cbl_func_sig = inspect.signature(cblaster)
+    filtered_args = {k: v for k,v in cbl_args.items() if k in cbl_func_sig.parameters}
+    
+    # Run cblaster search
+    cblaster(**filtered_args)
+    
+    # Run CAGEcleaner in local mode
+    rccl_method = rccl_args['method']
+    match rccl_method:
+        case 'genomes':
+            ccl_run = RemoteGenomeRun(rccl_args)
+        case 'regions':
+            ccl_run = RemoteRegionRun(rccl_args)
+        case _:
+            raise ValueError('Invalid local CAGEcleaner mode!')
+    
+    ccl_run.run()
+    
+    return None
 

@@ -6,6 +6,8 @@ import logging
 from pathlib import Path
 from importlib.metadata import version
 
+from cblaster.parsers import NCBI_DATABASES
+
 
 __version__ = version("csuite")
 
@@ -308,7 +310,7 @@ def register_remote_struc_subparser(subparsers):
 
 def register_derep_subparser(subparsers):
     parser = subparsers.add_parser('derep', add_help = False,
-                                   help = "Dereplication")
+                                   help = "dereplication")
     
     args_general = parser.add_argument_group('General')
     args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores',
@@ -354,7 +356,7 @@ def register_derep_subparser(subparsers):
 
 def register_output_subparser(subparsers):
     parser = subparsers.add_parser('output', add_help = False,
-                                   help = "Make plots for an existing session")
+                                   help = "make plots for an existing session")
     
     args_general = parser.add_argument_group('General')
     args_general.add_argument('-f', '--force', dest = 'MAIN$force',
@@ -381,6 +383,218 @@ def register_output_subparser(subparsers):
                               default = True, action = 'store_false', help = "Write cblaster clusterplot file (default: True).")
     args_outputs.add_argument('--clinker', dest = 'OUT$output_clinker',
                               default = True, action = 'store_false', help = "Write clinker plot file (default: True).")
+    
+    return None
+
+
+def register_remote_seq_subparser(subparsers):
+    parser = subparsers.add_parser('remote_seq', add_help = False,
+                                   help = "remote sequence-based search")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores', default = 1, type = int, 
+                              help = "Number of cores available to use (default: 1).")    
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-q', '--query', dest = 'CBL$query_file', metavar = 'query_file',
+                         required = True, type = Path, help = "Path to the query sequence fasta file.")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
+                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
+    
+    args_search = parser.add_argument_group('Search options')
+    args_search.add_argument("-db", "--database", dest = 'CBL$databases', metavar = 'databases', default=["nr"], 
+                             nargs="+", type=str, choices = list(NCBI_DATABASES),
+                             help="NCBI database to be searched (default: 'nr')")
+    args_search.add_argument("-eq", "--entrez_query", dest = 'CBL$entrez_query', metavar = 'entrez_query',
+                             help = "An NCBI Entrez search term for pre-search filtering of an NCBI database (e.g. 'Aspergillus'[organism]")
+    args_search.add_argument('--max-eval', dest = "CBL$max_evalue", metavar = 'max_eval', type = float, default = 1e-3,
+                             help = "Maximum e-value to include a BLAST hit (default: 1e-3).")
+    args_search.add_argument('--min-seqid', dest = "CBL$min_identity", metavar = 'min_seqid', type = float, default = 30,
+                             help = "Minimum sequence identity to include a hit (in percentages) (default: 30).")
+    args_search.add_argument('--min-qcov', dest = "CBL$min_coverage", metavar = 'min_qcov', type = float, default = 50,
+                             help = "Minimum query coverage to include a hit (in percentages) (default: 50).")
+    args_search.add_argument("--max-gap", dest = 'CBL$gap', metavar = 'max_gap', type = int, default = 5000, 
+                             help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
+    args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
+                             help = "Minimum different queries covered by a cluster (default: 2).")
+    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+                             help = "Minimum number of members in a cluster (default: 2).")
+    args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
+                             help = "Queries that have to present in a cluster (default: None).")
+    args_search.add_argument("--percentage", dest = 'CBL$percentage', metavar = 'percentage', type = int, default = 0,
+                             help = "Percentage of query genes required to be present in cluster (default: 0).")
+    
+    return None
+
+
+def register_local_seq_subparser(subparsers):
+    parser = subparsers.add_parser('local_seq', add_help = False,
+                                   help = "local sequence-based search")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores', default = 1, type = int, 
+                              help = "Number of cores available to use (default: 1).")    
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-q', '--query', dest = 'CBL$query_file', metavar = 'query_file',
+                         required = True, type = Path, help = "Path to the query sequence fasta file.")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
+                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
+    args_io.add_argument('-g', '--genomes', dest = 'CBLDB$paths', metavar = 'genomes', type = Path, default = Path,
+                         help = 'Path to folder containing the local genome files to search in. Should contain Genbank files or pairs of Fasta and GFF files. (default: current location).')
+    
+    args_search = parser.add_argument_group('Search options')
+    args_search.add_argument('--max-eval', dest = "CBL$max_evalue", metavar = 'max_eval', type = float, default = 1e-3,
+                             help = "Maximum e-value to include a BLAST hit (default: 1e-3).")
+    args_search.add_argument('--min-seqid', dest = "CBL$min_identity", metavar = 'min_seqid', type = float, default = 30,
+                             help = "Minimum sequence identity to include a hit (in percentages) (default: 30).")
+    args_search.add_argument('--min-qcov', dest = "CBL$min_coverage", metavar = 'min_qcov', type = float, default = 50,
+                             help = "Minimum query coverage to include a hit (in percentages) (default: 50).")
+    args_search.add_argument("--max-gap", dest = 'CBL$gap', metavar = 'max_gap', type = int, default = 5000, 
+                             help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
+    args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
+                             help = "Minimum different queries covered by a cluster (default: 2).")
+    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+                             help = "Minimum number of members in a cluster (default: 2).")
+    args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
+                             help = "Queries that have to present in a cluster (default: None).")
+    args_search.add_argument("--percentage", dest = 'CBL$percentage', metavar = 'percentage', type = int, default = 0,
+                             help = "Percentage of query genes required to be present in cluster (default: 0).")
+    
+    return None
+
+
+def register_local_seq_derep_subparser(subparsers):
+    parser = subparsers.add_parser('local_seq_derep', add_help = False,
+                                   help = "local sequence-based search with dereplication")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores', default = 1, type = int, 
+                              help = "Number of cores available to use (default: 1).")    
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
+    args_general.add_argument('-np', '--no-progress', dest = "MAIN$no_progress",
+                              default = False, action = 'store_true', help = "Hide most progress bars (default: False).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-q', '--query', dest = 'CBL$query_file', metavar = 'query_file',
+                         required = True, type = Path, help = "Path to the query sequence fasta file.")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
+                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
+    args_io.add_argument('-g', '--genomes', dest = 'CBLDB$paths', metavar = 'genomes', type = Path, default = Path,
+                         help = 'Path to folder containing the local genome files to search in. Should contain Genbank files or pairs of Fasta and GFF files. (default: current location).')
+    args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
+                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+    args_io.add_argument('--keep_temp_derep', dest = "lCCL$keep_intermediate",
+                         default = False, action = "store_true", help = "Keep all temporary dereplication data.")
+    
+    args_search = parser.add_argument_group('Search options')
+    args_search.add_argument('--max-eval', dest = "CBL$max_evalue", metavar = 'max_eval', type = float, default = 1e-3,
+                             help = "Maximum e-value to include a BLAST hit (default: 1e-3).")
+    args_search.add_argument('--min-seqid', dest = "CBL$min_identity", metavar = 'min_seqid', type = float, default = 30,
+                             help = "Minimum sequence identity to include a hit (in percentages) (default: 30).")
+    args_search.add_argument('--min-qcov', dest = "CBL$min_coverage", metavar = 'min_qcov', type = float, default = 50,
+                             help = "Minimum query coverage to include a hit (in percentages) (default: 50).")
+    args_search.add_argument("--max-gap", dest = 'CBL$gap', metavar = 'max_gap', type = int, default = 5000, 
+                             help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
+    args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
+                             help = "Minimum different queries covered by a cluster (default: 2).")
+    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+                             help = "Minimum number of members in a cluster (default: 2).")
+    args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
+                             help = "Queries that have to present in a cluster (default: None).")
+    args_search.add_argument("--percentage", dest = 'CBL$percentage', metavar = 'percentage', type = int, default = 0,
+                             help = "Percentage of query genes required to be present in cluster (default: 0).")
+    
+    args_dereplication = parser.add_argument_group('Dereplication options')
+    args_dereplication.add_argument('--method', dest = 'lCCL$method', metavar = 'method',
+                                    default = "genomes", choices = ['genomes', 'regions'], type = str, 
+                                    help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
+    args_dereplication.add_argument('-i', '--identity', dest = 'lCCL$identity', metavar = 'identity',
+                                    default = 99.0, type = float, help = "Identity dereplication cutoff (default: 99.0)")
+    args_dereplication.add_argument('-c', '--coverage', dest = 'lCCL$coverage', metavar = 'coverage',
+                                    default = 80.0, type = float, help = "Coverage dereplication cutoff (default: 80.0)")
+    
+    args_region_dereplication = parser.add_argument_group('Region-based-specific dereplication options')
+    args_region_dereplication.add_argument('-m', '--margin', dest = 'lCCL$margin', metavar = 'margin',
+                                           default = 0, type = int, help = "Sequence margin at both sides of the cluster in bp. Required in case of region-based dereplication. (default: 0)")
+    
+    return None
+
+
+def register_remote_seq_derep_subparser(subparsers):
+    parser = subparsers.add_parser('remote_seq_derep', add_help = False,
+                                   help = "remote sequence-based search with dereplication")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('--cores', dest = 'MAIN$cores', metavar = 'cores', default = 1, type = int, 
+                              help = "Number of cores available to use (default: 1).")    
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', help = "Force overwriting output (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar = 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4], help = "Console verbosity level (default: 3 (info)).")
+    args_general.add_argument('-np', '--no-progress', dest = "MAIN$no_progress",
+                              default = False, action = 'store_true', help = "Hide most progress bars (default: False).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-q', '--query', dest = 'CBL$query_file', metavar = 'query_file',
+                         required = True, type = Path, help = "Path to the query sequence fasta file.")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
+                         type = Path, default = Path('.'), help = "Output directory (default: current location)")
+    args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
+                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+    args_io.add_argument('--keep_temp_derep', dest = "rCCL$keep_intermediate",
+                         default = False, action = "store_true", help = "Keep all temporary dereplication data.")
+    
+    args_search = parser.add_argument_group('Search options')
+    args_search.add_argument("-db", "--database", dest = 'CBL$databases', metavar = 'databases', default=["nr"], 
+                             nargs="+", type=str, choices = list(NCBI_DATABASES),
+                             help="NCBI database to be searched (default: 'nr')")
+    args_search.add_argument("-eq", "--entrez_query", dest = 'CBL$entrez_query', metavar = 'entrez_query',
+                             help = "An NCBI Entrez search term for pre-search filtering of an NCBI database (e.g. 'Aspergillus'[organism]")
+    args_search.add_argument('--max-eval', dest = "CBL$max_evalue", metavar = 'max_eval', type = float, default = 1e-3,
+                             help = "Maximum e-value to include a BLAST hit (default: 1e-3).")
+    args_search.add_argument('--min-seqid', dest = "CBL$min_identity", metavar = 'min_seqid', type = float, default = 30,
+                             help = "Minimum sequence identity to include a hit (in percentages) (default: 30).")
+    args_search.add_argument('--min-qcov', dest = "CBL$min_coverage", metavar = 'min_qcov', type = float, default = 50,
+                             help = "Minimum query coverage to include a hit (in percentages) (default: 50).")
+    args_search.add_argument("--max-gap", dest = 'CBL$gap', metavar = 'max_gap', type = int, default = 5000, 
+                             help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
+    args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
+                             help = "Minimum different queries covered by a cluster (default: 2).")
+    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+                             help = "Minimum number of members in a cluster (default: 2).")
+    args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
+                             help = "Queries that have to present in a cluster (default: None).")
+    args_search.add_argument("--percentage", dest = 'CBL$percentage', metavar = 'percentage', type = int, default = 0,
+                             help = "Percentage of query genes required to be present in cluster (default: 0).")
+    
+    args_dereplication = parser.add_argument_group('Dereplication options')
+    args_dereplication.add_argument('--method', dest = 'rCCL$method', metavar = 'method',
+                                    default = "genomes", choices = ['genomes', 'regions'], type = str, 
+                                    help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
+    args_dereplication.add_argument('-i', '--identity', dest = 'rCCL$identity', metavar = 'identity',
+                                    default = 99.0, type = float, help = "Identity dereplication cutoff (default: 99.0)")
+    args_dereplication.add_argument('-c', '--coverage', dest = 'rCCL$coverage', metavar = 'coverage',
+                                    default = 80.0, type = float, help = "Coverage dereplication cutoff (default: 80.0)")
+    
+    args_region_dereplication = parser.add_argument_group('Region-based-specific dereplication options')
+    args_region_dereplication.add_argument('-m', '--margin', dest = 'rCCL$margin', metavar = 'margin',
+                                           default = 0, type = int, help = "Sequence margin at both sides of the cluster in bp. Required in case of region-based dereplication. (default: 0)")
     
     return None
 

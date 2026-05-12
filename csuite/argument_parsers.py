@@ -4,7 +4,10 @@
 import argparse
 import logging
 
-from csuite.validators import validate_main_args, validate_output_args
+from csuite.validators import (validate_main_args,
+                               validate_output_args,
+                               validate_cblaster_search_args,
+                               validate_cblaster_makedb_args)
 from cfoldseeker.main import parse_and_validate_arguments as cfs_arg_validator
 from cfoldseeker.build_cds_db import parse_and_validate_arguments as cfscds_arg_validator
 from cagecleaner.validators import parse_and_validate_arguments as ccl_arg_validator
@@ -13,7 +16,9 @@ from csuite.defaults import (cfoldseekerDefaultConfiguration,
                              cfoldseekerCDSDefaultConfiguration,
                              CAGEcleanerDefaultConfiguration,
                              mainDefaultConfiguration,
-                             outputDefaultConfiguration)
+                             outputDefaultConfiguration,
+                             cblasterSearchDefaultConfiguration,
+                             cblasterMakedbDefaultConfiguration)
 
 
 LOG = logging.getLogger(__name__)
@@ -38,6 +43,8 @@ TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
                       'rCCL': CAGEcleanerDefaultConfiguration(),
                       'CCL': CAGEcleanerDefaultConfiguration(),
                       'OUT': outputDefaultConfiguration(),
+                      'CBL': cblasterSearchDefaultConfiguration(),
+                      'CBLDB': cblasterMakedbDefaultConfiguration(),
                       }
 
 TOOL_ARG_VALIDATORS = {'MAIN': validate_main_args,
@@ -47,6 +54,8 @@ TOOL_ARG_VALIDATORS = {'MAIN': validate_main_args,
                        'lCCL': lambda x: ccl_arg_validator(x, bypass_source = 'local'),
                        'rCCL': lambda x: ccl_arg_validator(x, bypass_source = 'remote'),
                        'OUT': validate_output_args,
+                       'CBL': validate_cblaster_search_args,
+                       'CBLDB': validate_cblaster_makedb_args,
                        }
 
 

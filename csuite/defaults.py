@@ -101,3 +101,59 @@ class outputDefaultConfiguration():
         self.output_clinker = True
         
         
+class cblasterSearchDefaultConfiguration():
+    def __init__(self):
+        self.query_file = None
+        self.query_ids = None
+        self.query_profiles = None
+        self.mode = None
+        self.databases = None
+        self.database_pfam = None
+        self.gap = 5000
+        self.unique = 2
+        self.min_hits = 2
+        self.min_identity = float(30)
+        self.min_coverage = float(50)
+        self.max_evalue = 1e-3
+        self.percentage = None
+        self.entrez_query = None
+        self.output = None
+        self.output_hide_headers = False
+        self.output_delimiter = None
+        self.output_decimals = 4
+        self.output_sort_clusters = False
+        self.binary = None
+        self.binary_hide_headers = False
+        self.binary_delimiter = '\t'
+        self.binary_key = len
+        self.binary_attr = "identity"
+        self.binary_decimals = 4
+        self.rid = None
+        self.require = None
+        self.session_file = [Path('session.json')]
+        self.indent = None
+        self.plot = False
+        self.max_plot_clusters = 50
+        self.recompute = False
+        self.blast_file = None
+        self.ipg_file = None
+        self.hitlist_size = 2000
+        self.cpus = 1
+        self.intermediate_genes = False
+        self.intermediate_gene_distance = 5000
+        self.intermediate_max_clusters = 0
+        self.testing = False
+        self.dmnd_sensitivity = 'fast'
+        
+
+class cblasterMakedbDefaultConfiguration():
+    def __init__(self):
+        self.paths = []
+        self.database = 'local_db'
+        self.force = False
+        self.cpus = None
+        self.batch = 100
+        self.compress = False
+        
+        
+        
