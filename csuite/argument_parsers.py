@@ -48,7 +48,7 @@ TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
                       }
 
 TOOL_ARG_VALIDATORS = {'MAIN': validate_main_args,
-                       'CFS': lambda x: cfs_arg_validator(x, skip_csuite_IO_checks = True),
+                       'CFS': lambda x: cfs_arg_validator(x, skip_context_table_check = True),
                        'CFSCDS': cfscds_arg_validator,
                        'CCL': ccl_arg_validator,
                        'lCCL': lambda x: ccl_arg_validator(x, bypass_source = 'local'),
