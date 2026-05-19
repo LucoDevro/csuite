@@ -1,6 +1,8 @@
 csuite
 ===================
 
+Comprehensive documentation for all API exposed by ``csuite``
+
 main
 -----------------------
 
@@ -18,7 +20,7 @@ workflows
    :show-inheritance:
 
 cli\_parsers
------------
+------------
 
 .. automodule:: csuite.cli_parsers
    :members:
