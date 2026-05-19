@@ -65,7 +65,7 @@ def register_local_struc_derep_subparser(subparsers):
     
     args_search = parser.add_argument_group('General search options')
     args_search.add_argument('--search-mode', dest = 'CFS$mode', metavar = 'mode', default = 'local',
-                             type = str, choices = ['local', 'local_clustered'], help = "Search mode (default: local)")
+                             type = str, choices = ['local', 'local_clustered'], help = "Search mode (default: local) (choices: local, local_clustered).")
     args_search.add_argument('--max-eval', dest = "CFS$max_eval", metavar = 'max_eval',
                              type = float, default = 1e-9, help = "Maximum e-value to include a FoldSeek hit (default: 1e-9).")
     args_search.add_argument('--min-score', dest = "CFS$min_score", metavar = 'min_score',
@@ -97,7 +97,7 @@ def register_local_struc_derep_subparser(subparsers):
                                       help = "Path to MMseqs2 clustering table TSV file (default: cluster_clustered.tsv).")
     
     args_dereplication = parser.add_argument_group('Dereplication options')
-    args_dereplication.add_argument('--method', dest = 'lCCL$method', metavar = 'method',
+    args_dereplication.add_argument('--derep-method', dest = 'lCCL$method', metavar = 'method',
                                     default = "genomes", choices = ['genomes', 'regions'], type = str, 
                                     help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
     args_dereplication.add_argument('-i', '--identity', dest = 'lCCL$identity', metavar = 'identity',
@@ -157,7 +157,7 @@ def register_local_struc_subparser(subparsers):
     
     args_search = parser.add_argument_group('General search options')
     args_search.add_argument('--search-mode', dest = 'CFS$mode', metavar = 'mode', default = 'local',
-                             type = str, choices = ['local', 'local_clustered'], help = "Search mode (default: local)")
+                             type = str, choices = ['local', 'local_clustered'], help = "Search mode (default: local) (choices: local, local_clustered).")
     args_search.add_argument('--max-eval', dest = "CFS$max_eval", metavar = 'max_eval',
                              type = float, default = 1e-9, help = "Maximum e-value to include a FoldSeek hit (default: 1e-9).")
     args_search.add_argument('--min-score', dest = "CFS$min_score", metavar = 'min_score',
@@ -266,7 +266,7 @@ def register_remote_struc_derep_subparser(subparsers):
                              help = "Maximum number of workers to query the remote servers (FoldSeek, KEGG, ENA) (default: 2)")
     
     args_dereplication = parser.add_argument_group('Dereplication options')
-    args_dereplication.add_argument('--method', dest = 'rCCL$method', metavar = 'method',
+    args_dereplication.add_argument('--derep-method', dest = 'rCCL$method', metavar = 'method',
                                     default = "genomes", choices = ['genomes', 'regions'], type = str, 
                                     help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
     args_dereplication.add_argument('-i', '--identity', dest = 'rCCL$identity', metavar = 'identity',
@@ -525,7 +525,7 @@ def register_local_seq_derep_subparser(subparsers):
                              help = "Percentage of query genes required to be present in cluster (default: 0).")
     
     args_dereplication = parser.add_argument_group('Dereplication options')
-    args_dereplication.add_argument('--method', dest = 'lCCL$method', metavar = 'method',
+    args_dereplication.add_argument('--derep-method', dest = 'lCCL$method', metavar = 'method',
                                     default = "genomes", choices = ['genomes', 'regions'], type = str, 
                                     help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
     args_dereplication.add_argument('-i', '--identity', dest = 'lCCL$identity', metavar = 'identity',
@@ -601,7 +601,7 @@ def register_remote_seq_derep_subparser(subparsers):
                              help = "Percentage of query genes required to be present in cluster (default: 0).")
     
     args_dereplication = parser.add_argument_group('Dereplication options')
-    args_dereplication.add_argument('--method', dest = 'rCCL$method', metavar = 'method',
+    args_dereplication.add_argument('--derep-method', dest = 'rCCL$method', metavar = 'method',
                                     default = "genomes", choices = ['genomes', 'regions'], type = str, 
                                     help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
     args_dereplication.add_argument('-i', '--identity', dest = 'rCCL$identity', metavar = 'identity',
@@ -659,7 +659,7 @@ def register_derep_subparser(subparsers):
                          default = False, action = "store_true", help = "Keep all temporary dereplication data.")
     
     args_dereplication = parser.add_argument_group('Dereplication options')
-    args_dereplication.add_argument('--method', dest = 'CCL$method', metavar = 'method',
+    args_dereplication.add_argument('--derep-method', dest = 'CCL$method', metavar = 'method',
                                     default = "genomes", choices = ['genomes', 'regions'], type = str, 
                                     help = "Dereplication method: full genome-based ('genomes') or genomic neighbourhood-based ('regions') (default: genomes)")
     args_dereplication.add_argument('-i', '--identity', dest = 'CCL$identity', metavar = 'identity',
@@ -688,7 +688,7 @@ def register_output_subparser(subparsers):
         Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
     """
     parser = subparsers.add_parser('output', add_help = False,
-                                   help = "make plots for an existing session")
+                                   help = "generate outputs for an existing session")
     
     args_general = parser.add_argument_group('General')
     args_general.add_argument('-f', '--force', dest = 'MAIN$force',

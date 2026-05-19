@@ -77,17 +77,17 @@ def create_main_parser():
     # remote structure
     register_remote_struc_subparser(subparsers)
     
-    # local sequence
-    register_local_seq_subparser(subparsers)
-    
     # local sequence with dereplication
     register_local_seq_derep_subparser(subparsers)
     
-    # remote sequence
-    register_remote_seq_subparser(subparsers)
+    # local sequence
+    register_local_seq_subparser(subparsers)
     
     # remote sequence with dereplication
     register_remote_seq_derep_subparser(subparsers)
+    
+    # remote sequence
+    register_remote_seq_subparser(subparsers)
     
     # dereplication only
     register_derep_subparser(subparsers)
