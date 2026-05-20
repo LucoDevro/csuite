@@ -37,6 +37,13 @@ To **include a region-based hit dereplication** with sequence margins of 5 kb, r
 
 	csuite remote_seq_derep -q <query-folder> --derep-method regions -m 5000
 
+In any case, run the ``output`` workflow afterwards to **export typical cblaster-like outputs** from the newly generated session file.
+
+.. code-block:: bash
+
+	csuite output -s <session-file>
+
+
 Local runs
 -----------
 
@@ -77,5 +84,8 @@ For example, for a local structure-based search against a preclustered database 
 	-scl clustered_cluster.tsv \
 	--derep-method genomes \
 	-g <path-to-target-ncbi-genomes>
+
+	# export outputs from session
+	csuite output -s filtered_session.json
 
 
