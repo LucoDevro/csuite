@@ -108,6 +108,7 @@ class outputDefaultConfiguration():
     """
     def __init__(self):
         self.force = False
+        self.temp = Path(tempfile.gettempdir())
         self.verbosity = 3
         self.output = Path('.')
         self.output_summary = True
