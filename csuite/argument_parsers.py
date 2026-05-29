@@ -5,9 +5,12 @@ import argparse
 import logging
 
 from csuite.validators import (validate_main_args,
-                               validate_output_args,
+                               validate_report_args,
                                validate_cblaster_search_args,
-                               validate_cblaster_makedb_args)
+                               validate_cblaster_makedb_args,
+                               validate_remote_extract_args,
+                               validate_local_extract_args,
+                               )
 from cfoldseeker.main import parse_and_validate_arguments as cfs_arg_validator
 from cfoldseeker.build_cds_db import parse_and_validate_arguments as cfscds_arg_validator
 from cagecleaner.validators import parse_and_validate_arguments as ccl_arg_validator
@@ -16,9 +19,11 @@ from csuite.defaults import (cfoldseekerDefaultConfiguration,
                              cfoldseekerCDSDefaultConfiguration,
                              CAGEcleanerDefaultConfiguration,
                              mainDefaultConfiguration,
-                             outputDefaultConfiguration,
+                             reportDefaultConfiguration,
                              cblasterSearchDefaultConfiguration,
-                             cblasterMakedbDefaultConfiguration)
+                             cblasterMakedbDefaultConfiguration,
+                             extractDefaultConfiguration,
+                             )
 
 
 LOG = logging.getLogger(__name__)
@@ -33,7 +38,9 @@ WORKFLOW_TOOLS = {'remote_struc': ['MAIN', 'CFS'],
                   'remote_seq_derep': ['MAIN', 'CBL', 'rCCL'],
                   'local_seq_derep': ['MAIN', 'CBLDB', 'CBL', 'lCCL'],
                   'derep': ['MAIN', 'CCL'],
-                  'output': ['MAIN', 'OUT'],
+                  'report': ['MAIN', 'OUT'],
+                  'remote_extract': ['MAIN', 'rEXT'],
+                  'local_extract': ['MAIN', 'lEXT']
                   }
 
 # Define the default argument values for each tool
@@ -43,9 +50,11 @@ TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
                       'lCCL': CAGEcleanerDefaultConfiguration(),
                       'rCCL': CAGEcleanerDefaultConfiguration(),
                       'CCL': CAGEcleanerDefaultConfiguration(),
-                      'OUT': outputDefaultConfiguration(),
+                      'OUT': reportDefaultConfiguration(),
                       'CBL': cblasterSearchDefaultConfiguration(),
                       'CBLDB': cblasterMakedbDefaultConfiguration(),
+                      'rEXT': extractDefaultConfiguration(),
+                      'lEXT': extractDefaultConfiguration(),
                       }
 
 # Define the validator function for each tool
@@ -55,9 +64,11 @@ TOOL_ARG_VALIDATORS = {'MAIN': validate_main_args,
                        'CCL': ccl_arg_validator,
                        'lCCL': lambda x: ccl_arg_validator(x, bypass_source = 'local'),
                        'rCCL': lambda x: ccl_arg_validator(x, bypass_source = 'remote'),
-                       'OUT': validate_output_args,
+                       'OUT': validate_report_args,
                        'CBL': validate_cblaster_search_args,
                        'CBLDB': validate_cblaster_makedb_args,
+                       'rEXT': validate_remote_extract_args,
+                       'lEXT': validate_local_extract_args,
                        }
 
 

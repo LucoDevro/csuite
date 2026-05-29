@@ -11,11 +11,13 @@ from csuite.cli_parsers import (register_local_struc_derep_subparser,
                                 register_remote_struc_derep_subparser,
                                 register_remote_struc_subparser,
                                 register_derep_subparser,
-                                register_output_subparser,
+                                register_report_subparser,
                                 register_remote_seq_subparser,
                                 register_remote_seq_derep_subparser,
                                 register_local_seq_subparser,
                                 register_local_seq_derep_subparser,
+                                register_remote_extract_subparser,
+                                register_local_extract_subparser
                                 )
 from csuite.argument_parsers import categorise_args
 from csuite.workflows import setup_workflow, run_workflow
@@ -92,8 +94,14 @@ def create_main_parser():
     # dereplication only
     register_derep_subparser(subparsers)
     
-    # output generation only
-    register_output_subparser(subparsers)
+    # report generation only
+    register_report_subparser(subparsers)
+    
+    # extract sequences from a remote search
+    register_remote_extract_subparser(subparsers)
+    
+    # extract sequences from a local search
+    register_local_extract_subparser(subparsers)
     
     return parser
 

@@ -102,9 +102,9 @@ class mainDefaultConfiguration():
         self.temp = Path(tempfile.gettempdir())
     
 
-class outputDefaultConfiguration():
+class reportDefaultConfiguration():
     """
-    Data class for the default argument values of the output generation module.
+    Data class for the default argument values of the report generation module.
     """
     def __init__(self):
         self.force = False
@@ -178,4 +178,15 @@ class cblasterMakedbDefaultConfiguration():
         self.compress = False
         
         
+class extractDefaultConfiguration():
+    """
+    Data class for the default argument values of cluster extraction workflows.
+    """
+    def __init__(self):
+        self.prefix = "",
+        self.cluster_numbers = None,
+        self.score_threshold = None,
+        self.organisms = None,
+        self.scaffolds = None,
+        self.max_clusters = None
         

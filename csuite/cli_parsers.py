@@ -674,9 +674,9 @@ def register_derep_subparser(subparsers):
     return None
 
 
-def register_output_subparser(subparsers):
+def register_report_subparser(subparsers):
     """
-    Register the subparser for the output generation workflow.
+    Register the subparser for the report generation workflow.
     
     Args:
         subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
@@ -687,8 +687,8 @@ def register_output_subparser(subparsers):
     Note:
         Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
     """
-    parser = subparsers.add_parser('output', add_help = False,
-                                   help = "generate outputs for an existing session")
+    parser = subparsers.add_parser('report', add_help = False,
+                                   help = "generate reports for an existing session")
     
     args_general = parser.add_argument_group('General')
     args_general.add_argument('-f', '--force', dest = 'MAIN$force',
@@ -715,6 +715,133 @@ def register_output_subparser(subparsers):
                               default = True, action = 'store_false', help = "Write cblaster clusterplot file (default: True).")
     args_outputs.add_argument('--clinker', dest = 'OUT$output_clinker',
                               default = True, action = 'store_false', help = "Write clinker plot file (default: True).")
+    
+    return None
+
+
+def register_remote_extract_subparser(subparsers):
+    """
+    Register the subparser for the remote cluster extraction workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
+    parser = subparsers.add_parser('remote_extract', add_help = False,
+                                   help = "extract cluster genbanks for a remote search session")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', 
+                              help = "Force overwriting output (default: false).")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")    
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-s', '--session', dest = "rEXT$session", metavar = 'session', 
+                         type = Path, required = True,
+                         help = "Path to cfoldseeker session file.")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output', 
+                         type = Path, default = Path('.'),
+                         help = 'Path to output folder (default: current workdir).')
+    args_io.add_argument('--prefix', dest = 'rEXT$prefix', metavar = 'prefix', 
+                         type = str, default = '',
+                         help = "String to start the file name of each cluster with (default: '').")
+    args_io.add_argument('--flavour', dest = 'rEXT$format_', type = str, metavar = 'flavour',
+                         choices = ['genbank', 'bigscape'], default = 'genbank',
+                         help = 'The flavour that the extracted cluster genbank should have (choices: genbank, bigscape) (default: genbank).')
+    
+    args_filt = parser.add_argument_group('Cluster filters')
+    args_filt.add_argument('--cluster-numbers', dest = 'rEXT$cluster_numbers', metavar = 'cluster_numbers',
+                           type = str, nargs = '*', default = None,
+                           help = "cluster numbers to include.")
+    args_filt.add_argument("--score-threshold", dest = "rEXT$score_threshold", metavar = 'score_threshold',
+                           type = float, default = None,
+                           help = "minimum score for a cluster to be included")
+    args_filt.add_argument('--organisms', dest = "rEXT$organisms", metavar = "organisms",
+                           type = str, nargs = '*', default = None,
+                           help = "Organism filtering regular expressions. Clusters for these organisms are included.")
+    args_filt.add_argument("--scaffolds", dest = "rEXT$scaffolds", metavar = 'scaffolds',
+                           type = str, nargs = '*', default = None,
+                           help = "Clusters on these scaffolds are included.")
+    args_filt.add_argument('-mc', '--max-clusters', dest = 'rEXT$max_clusters', metavar = "max_clusters",
+                           type = int, default = None,
+                           help = "The maximum number of clusters extracted regardless of filters.")
+    
+    return None
+
+
+def register_local_extract_subparser(subparsers):
+    """
+    Register the subparser for the local cluster extraction workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
+    parser = subparsers.add_parser('local_extract', add_help = False,
+                                   help = "extract cluster genbanks for a local search session")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('-c', '--cores', dest = 'MAIN$cores', metavar = 'cores',
+                              type = int, default = 1,
+                              help = 'Number of parallel workers (default: 1).')
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', 
+                              help = "Force overwriting output (default: false).")
+    args_general.add_argument('-np', '--no-progress', dest = 'MAIN$no_progress',
+                              default = False, action = "store_true", 
+                              help = "Don't show progress bar (default: False).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar= 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4],
+                              help = "Console verbosity level (default: 3 (info))")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")    
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-s', '--session', dest = "lEXT$session", metavar = "session",
+                         type = Path, required = True,
+                         help = "Path to cfoldseeker session file.")
+    args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = "output",
+                         type = Path, default = Path('.'),
+                         help = 'Path to output folder (default: current workdir).')
+    args_io.add_argument('-fna', '--nucleotide-fasta', dest = 'lEXT$nucl_fastas_path', metavar = "nucl_fastas_path",
+                         type = Path, default = None,
+                         help = 'Path to folder with genomic nucleotide fasta files.')
+    args_io.add_argument('-faa', '--protein-fasta', dest = 'lEXT$prot_fastas_path',  metavar = "prot_fastas_path",
+                         type = Path, default = None,
+                         help = "Path to folder with genomic protein fasta files.")
+    args_io.add_argument('--prefix', dest = 'lEXT$prefix', metavar = 'prefix', 
+                         type = str, default = '',
+                         help = "String to start the file name of each cluster with (default: '').")
+    args_io.add_argument('--flavour', dest = 'lEXT$flavour', metavar = 'flavour',
+                         type = str, choices = ['genbank', 'bigscape'], default = 'genbank',
+                         help = 'The flavour that the extracted cluster genbank should have (choices: genbank, bigscape) (default: genbank).')
+    
+    args_filt = parser.add_argument_group('Cluster filters')
+    args_filt.add_argument('--cluster-numbers', dest = 'lEXT$cluster_numbers', metavar = 'cluster_numbers',
+                           type = str, nargs = '*', default = None,
+                           help = "cluster numbers to include.")
+    args_filt.add_argument("--score-threshold", dest = "lEXT$score_threshold", metavar = 'score_threshold',
+                           type = float, default = None,
+                           help = "minimum score for a cluster to be included")
+    args_filt.add_argument('--organisms', dest = "lEXT$organisms", metavar = 'organisms',
+                           type = str, nargs = '*', default = None,
+                           help = "Organism filtering regular expressions. Clusters for these organisms are included.")
+    args_filt.add_argument("--scaffolds", dest = "lEXT$scaffolds", metavar = 'scaffolds',
+                           type = str, nargs = '*', default = None,
+                           help = "Clusters on these scaffolds are included.")
+    args_filt.add_argument('-mc', '--max-clusters', dest = 'lEXT$max_clusters', metavar = 'max_clusters',
+                           type = int, default = None,
+                           help = "The maximum number of clusters extracted regardless of filters.")
     
     return None
 

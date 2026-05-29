@@ -8,6 +8,8 @@ from pathlib import Path
 from Bio import SeqIO
 
 from cblaster.parsers import NCBI_DATABASES
+from cblaster.classes import Session
+from cfoldseeker.export_sequences import parse_and_validate_arguments as cfsext_arg_validator
 
 
 LOG = logging.getLogger(__name__)
@@ -49,9 +51,9 @@ def validate_main_args(args: argparse.Namespace) -> dict:
     return vars(args)
 
 
-def validate_output_args(args: argparse.Namespace) -> dict:
+def validate_report_args(args: argparse.Namespace) -> dict:
     """
-    Validate the arguments of the output generation module.
+    Validate the arguments of the report generation module.
     
     Args:
         args (argparse.Namespace): Argument namespace to be validated and parsed.
@@ -176,4 +178,63 @@ def validate_cblaster_makedb_args(args: argparse.Namespace) -> dict:
     # Parse and return
     return vars(args)
 
+
+def validate_remote_extract_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the arguments of the remote cluster extraction module.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs
+    """
+    try:
+        if not args.session.is_file():
+            raise IOError('Session file does not exist.')
+        if args.max_clusters and not(int(args.max_clusters) > 0):
+            raise ValueError('Maximum number of clusters must be a strictly positive integer.')
+        if args.score_threshold and not(float(args.score_threshold) > 0):
+            raise ValueError('Score threshold must be a strictly positive integer.')
+    except (IOError, ValueError) as err:
+        raise err
+        
+    # Parse and return
+    return vars(args)
+
+
+def validate_local_extract_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the arguments of the remote cluster extraction module.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs
+        
+    Note:
+        This validator automatically differentiates between cblaster and cfoldseeker sessions,
+            and calls the appropriate validator.
+    """
+    try:
+        if not args.session.is_file():
+            raise IOError('Session file does not exist.')
+        # Recognise which tool generated this session
+        # cblaster leaves the sequence attribute of local searches empty; cfoldseeker fills it with the local filelabel
+        session = Session.from_file(args.session)
+        first_scaffold = list(session.organisms[0].scaffolds.values())[0]
+        match first_scaffold.subjects[0].sequence:
+            # cblaster session
+            case None:
+                parsed_args = validate_remote_extract_args(args)
+            # cfoldseeker session
+            case str():
+                parsed_args = cfsext_arg_validator(args)
+            case _:
+                raise ValueError('Could not determine session type!')
+    except:
+        raise
+        
+    return parsed_args
 
