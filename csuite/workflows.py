@@ -10,7 +10,7 @@ from pathlib import Path
 from csuite.argument_parsers import parse_and_validate_args
 from cfoldseeker.build_cds_db import run_workflow as cfscds_workflow
 from cfoldseeker.main import run_workflow as cfs_workflow
-from cfoldseeker.export_sequences import run_workflow as cfs_extract
+from cfoldseeker.extract_sequences import run_workflow as cfs_extract
 from cagecleaner.local_genome_run import LocalGenomeRun
 from cagecleaner.local_region_run import LocalRegionRun
 from cagecleaner.remote_genome_run import RemoteGenomeRun

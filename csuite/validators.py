@@ -8,8 +8,7 @@ from pathlib import Path
 from Bio import SeqIO
 
 from cblaster.parsers import NCBI_DATABASES
-from cblaster.classes import Session
-from cfoldseeker.export_sequences import parse_and_validate_arguments as cfsext_arg_validator
+from cfoldseeker.extract_sequences import parse_and_validate_arguments as cfsext_arg_validator
 
 
 LOG = logging.getLogger(__name__)
