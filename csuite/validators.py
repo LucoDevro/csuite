@@ -213,24 +213,7 @@ def validate_local_extract_args(args: argparse.Namespace) -> dict:
         This validator automatically differentiates between cblaster and cfoldseeker sessions,
             and calls the appropriate validator.
     """
-    try:
-        if not args.session.is_file():
-            raise IOError('Session file does not exist.')
-        # Recognise which tool generated this session
-        # cblaster leaves the sequence attribute of local searches empty; cfoldseeker fills it with the local filelabel
-        session = Session.from_file(args.session)
-        first_scaffold = list(session.organisms[0].scaffolds.values())[0]
-        match first_scaffold.subjects[0].sequence:
-            # cblaster session
-            case None:
-                parsed_args = validate_remote_extract_args(args)
-            # cfoldseeker session
-            case str():
-                parsed_args = cfsext_arg_validator(args)
-            case _:
-                raise ValueError('Could not determine session type!')
-    except:
-        raise
+    parsed_args = cfsext_arg_validator(args)
         
     return parsed_args
 

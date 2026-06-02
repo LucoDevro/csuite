@@ -1011,27 +1011,7 @@ def run_local_extract_workflow(parsed_args: dict) -> None:
     """
     lext_args = parsed_args['lEXT']
     
-    LOG.info("Reading session")
-    session = Session.from_file(lext_args['session'])
-    
-    # Recognise which tool generated this session
-    # cblaster leaves the sequence attribute of local searches empty; cfoldseeker fills it with the local filelabel
-    first_scaffold = list(session.organisms[0].scaffolds.values())[0]
-    match first_scaffold.subjects[0].sequence:
-        # cblaster session
-        case None:
-            # Get the arguments we need for cblaster's extract_clusters
-            cblext_func_sig = inspect.signature(cbl_extract)
-            filtered_cblext_args = {k: v for k,v in lext_args.items() if k in cblext_func_sig.parameters}
-            
-            # Run cblaster's extract_clusters workflow
-            cbl_extract(**filtered_cblext_args)
-        # cfoldseeker session
-        case str():
-            # Run cfoldseeker's extract_sequences workflow
-            cfs_extract(lext_args)
-        case _:
-            raise ValueError('Could not determine session type!')
+    cfs_extract(lext_args)
             
     return None
 
