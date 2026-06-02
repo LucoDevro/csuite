@@ -536,7 +536,7 @@ def setup_report(categorised_args: dict[argparse.Namespace]) -> dict:
     main_output_folder = main_args.output
     
     # output flags
-    out_args.output = main_output_folder / 'reports'
+    out_args.output = main_output_folder
     out_args.temp = main_temp_folder
     out_args.force = main_args.force
     out_args.verbosity = main_args.verbosity
@@ -967,12 +967,10 @@ def run_report_workflow(parsed_args: dict) -> None:
     if out_args['output_clinker']:
         LOG.info("Writing clinker plot")
         path = out_args['output'] / "clinker.html"
-        with open(out_args['temp'] / "session.json", "w") as handle:
-            session.to_json(fp = handle)
-        plot_clusters(out_args['temp'] / "session.json", plot_outfile = path, max_clusters = 10**6)
+        plot_clusters(out_args['session'], plot_outfile = path, max_clusters = 10**6)
         LOG.debug(f'clinker plot written at {str(path)}')
         
-        return None
+    return None
 
 
 def run_remote_extract_workflow(parsed_args: dict) -> None:

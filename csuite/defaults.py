@@ -22,10 +22,10 @@ class cfoldseekerDefaultConfiguration():
         self.output = Path('.')
         self.output_tables = True
         self.output_session = True
-        self.output_summary = True
-        self.output_binary = True
-        self.output_plot = True
-        self.output_clinker = True
+        self.output_summary = False
+        self.output_binary = False
+        self.output_plot = False
+        self.output_clinker = False
         self.output_foldseek = True
         self.max_eval = 1e-9
         self.min_score = float(250)
@@ -59,6 +59,8 @@ class cfoldseekerCDSDefaultConfiguration():
         self.cores = 1
         self.force = False
         self.no_progress = False
+        self.fetch_taxa_auto = False
+        self.fetch_taxa_file = None
         
 
 class CAGEcleanerDefaultConfiguration():
@@ -152,7 +154,7 @@ class cblasterSearchDefaultConfiguration():
         self.session_file = [Path('session.json')]
         self.indent = None
         self.plot = False
-        self.max_plot_clusters = 50
+        self.max_plot_clusters = None
         self.recompute = False
         self.blast_file = None
         self.ipg_file = None

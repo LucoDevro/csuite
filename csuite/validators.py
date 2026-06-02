@@ -61,15 +61,12 @@ def validate_report_args(args: argparse.Namespace) -> dict:
     Returns:
         parsed_args (dict): dictionary of argument name-value pairs
     """
-    # First validate main argument values
-    parsed_args = validate_main_args(args)
-        
     # Session file should exist
-    if not parsed_args['session'].is_file():
+    if not Path(args.session).is_file():
         raise FileNotFoundError("Session file not found!")
         
     # Parse and return
-    return parsed_args
+    return vars(args)
 
 
 def validate_cblaster_search_args(args: argparse.Namespace) -> dict:
