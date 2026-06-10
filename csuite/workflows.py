@@ -104,6 +104,7 @@ def setup_local_struc_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     
     # cfoldseeker-cds
     cfscds_args.output = main_output_folder / 'cfoldseeker_cds' / 'cds_db.tsv.gz'
+    cfscds_args.temp = main_temp_folder
     cfscds_args.cores = main_args.cores
     cfscds_args.force = main_args.force
     cfscds_args.verbosity = main_args.verbosity
@@ -122,6 +123,7 @@ def setup_local_struc_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     lccl_args.session = cfs_args.output / 'session.json'
     lccl_args.output = main_output_folder / 'cagecleaner'
     lccl_args.temp = main_temp_folder
+    lccl_args.genome_dir = cfscds_args.input
     lccl_args.cores = main_args.cores
     lccl_args.force = main_args.force
     lccl_args.verbosity = main_args.verbosity
@@ -207,6 +209,7 @@ def setup_local_struc(categorised_args: dict[argparse.Namespace]) -> dict:
     
     # cfoldseeker-cds
     cfscds_args.output = main_output_folder / 'cfoldseeker_cds' / 'cds_db.tsv.gz'
+    cfscds_args.temp = main_temp_folder
     cfscds_args.cores = main_args.cores
     cfscds_args.force = main_args.force
     cfscds_args.verbosity = main_args.verbosity

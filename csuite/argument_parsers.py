@@ -3,16 +3,16 @@
 
 import argparse
 import logging
+from functools import partial
 
-from csuite.validators import (validate_main_args,
-                               validate_report_args,
+from csuite.validators import (validate_report_args,
                                validate_cblaster_search_args,
                                validate_cblaster_makedb_args,
                                validate_remote_extract_args,
-                               validate_local_extract_args,
                                )
 from cfoldseeker.main import parse_and_validate_arguments as cfs_arg_validator
 from cfoldseeker.build_cds_db import parse_and_validate_arguments as cfscds_arg_validator
+from cfoldseeker.extract_sequences import parse_and_validate_arguments as cfsext_arg_validator
 from cagecleaner.validators import parse_and_validate_arguments as ccl_arg_validator
 
 from csuite.defaults import (cfoldseekerDefaultConfiguration,
@@ -58,17 +58,17 @@ TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
                       }
 
 # Define the validator function for each tool
-TOOL_ARG_VALIDATORS = {'MAIN': validate_main_args,
-                       'CFS': lambda x: cfs_arg_validator(x, skip_context_table_check = True),
+TOOL_ARG_VALIDATORS = {'MAIN': vars, # No validation for main args, just parsing; validation is done by tools
+                       'CFS': partial(cfs_arg_validator, skip_context_table_check = True),
                        'CFSCDS': cfscds_arg_validator,
                        'CCL': ccl_arg_validator,
-                       'lCCL': lambda x: ccl_arg_validator(x, bypass_source = 'local'),
-                       'rCCL': lambda x: ccl_arg_validator(x, bypass_source = 'remote'),
+                       'lCCL': partial(ccl_arg_validator, bypass_source = 'local'),
+                       'rCCL': partial(ccl_arg_validator, bypass_source = 'remote'),
                        'OUT': validate_report_args,
                        'CBL': validate_cblaster_search_args,
                        'CBLDB': validate_cblaster_makedb_args,
                        'rEXT': validate_remote_extract_args,
-                       'lEXT': validate_local_extract_args,
+                       'lEXT': cfsext_arg_validator,
                        }
 
 

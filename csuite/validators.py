@@ -8,15 +8,14 @@ from pathlib import Path
 from Bio import SeqIO
 
 from cblaster.parsers import NCBI_DATABASES
-from cfoldseeker.extract_sequences import parse_and_validate_arguments as cfsext_arg_validator
 
 
 LOG = logging.getLogger(__name__)
 
 
-def validate_main_args(args: argparse.Namespace) -> dict:
+def validate_report_args(args: argparse.Namespace) -> dict:
     """
-    Validate the main shared arguments.
+    Validate the arguments of the report generation module.
     
     Args:
         args (argparse.Namespace): Argument namespace to be validated and parsed.
@@ -34,32 +33,10 @@ def validate_main_args(args: argparse.Namespace) -> dict:
             LOG.error('Output folder already exists! Rerun with -f to overwrite it.')
             raise err
             
-    # Temporary directory should not exist yet if not default, unless flagged.
-    if args.temp != Path(tempfile.gettempdir()):
-        try:
-            args.temp.mkdir(parents = True)
-        except FileExistsError as err:
-            if args.force:
-                LOG.warning('Temp folder already exists, but it will be overwritten.')
-            else:
-                LOG.error('Temp folder already exists! Rerun with -f to overwrite it.')
-                raise err
+    # Temporary directory will always be unique.
+    args.temp.mkdir(parents = True, exist_ok = True)
     args.temp = Path(tempfile.mkdtemp(dir = args.temp))
     
-    # Parse and return
-    return vars(args)
-
-
-def validate_report_args(args: argparse.Namespace) -> dict:
-    """
-    Validate the arguments of the report generation module.
-    
-    Args:
-        args (argparse.Namespace): Argument namespace to be validated and parsed.
-        
-    Returns:
-        parsed_args (dict): dictionary of argument name-value pairs
-    """
     # Session file should exist
     if not Path(args.session).is_file():
         raise FileNotFoundError("Session file not found!")
@@ -121,7 +98,7 @@ def validate_cblaster_search_args(args: argparse.Namespace) -> dict:
     if not(set(args.require) <= query_headers):
         raise ValueError("A required query cannot be found in your query fasta folder. Please check your labels.")
     
-    # Output folder can already exist if force flag is on
+    # Output folder can already exist only if force flag is on
     try:
         session_file.parent.mkdir(parents = True)
     except FileExistsError as err:
@@ -195,25 +172,16 @@ def validate_remote_extract_args(args: argparse.Namespace) -> dict:
     except (IOError, ValueError) as err:
         raise err
         
+    # Output directory should not exist yet, unless flagged.
+    try:
+        args.output.mkdir(parents = True)
+    except FileExistsError as err:
+        if args.force:
+            LOG.warning('Output folder already exists, but it will be overwritten.')
+        else:
+            LOG.error('Output folder already exists! Rerun with -f to overwrite it.')
+            raise err
+            
     # Parse and return
     return vars(args)
-
-
-def validate_local_extract_args(args: argparse.Namespace) -> dict:
-    """
-    Validate the arguments of the remote cluster extraction module.
-    
-    Args:
-        args (argparse.Namespace): Argument namespace to be validated and parsed.
-        
-    Returns:
-        parsed_args (dict): dictionary of argument name-value pairs
-        
-    Note:
-        This validator automatically differentiates between cblaster and cfoldseeker sessions,
-            and calls the appropriate validator.
-    """
-    parsed_args = cfsext_arg_validator(args)
-        
-    return parsed_args
 
