@@ -49,19 +49,16 @@ def register_local_struc_derep_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
-    args_io.add_argument('-g', '--genomes', dest = "lCCL$genome_dir", metavar = 'genome_dir',
-                         type = Path, default = '.', 
-                         help = "[Only relevant for local searches] Path to local genome folder containing genome files. Accepted formats are FASTA and Genbank [.fasta; .fna; .fa; .gbff; .gbk; .gb]. Files can be gzipped. (default: current working directory)")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     args_io.add_argument('--keep_temp_derep', dest = "lCCL$keep_intermediate",
                          default = False, action = "store_true", help = "Keep all temporary dereplication data.")
     
     args_cds_db = parser.add_argument_group('Context database construction options')
     args_cds_db.add_argument('--context-input', dest = 'CFSCDS$input', metavar = 'input',
-                             type = Path, default = Path('.'), help = "Path to folder holding the input files or NCBI package (default: current directory)")
+                             type = Path, default = Path('.'), help = "Path to folder holding the Genbank files or NCBI Genbank package (default: current directory)")
     args_cds_db.add_argument('--context-parsing-mode', dest = 'CFSCDS$mode', metavar = 'mode',
-                             type = str, required = True, choices = ['ncbi-gff', 'ncbi-package', 'bakta-gff', 'tsv'],
-                             help = 'File parsing mode (choices: ncbi-gff, ncbi-package, bakta-gff, tsv).')
+                             type = str, required = True, choices = ['ncbi-gbff', 'ncbi-package', 'bakta-gbff', 'tsv'],
+                             help = 'Context file parsing mode (choices: ncbi-gbff, ncbi-package, bakta-gbff, tsv).')
     
     args_search = parser.add_argument_group('General search options')
     args_search.add_argument('--search-mode', dest = 'CFS$mode', metavar = 'mode', default = 'local',
@@ -146,14 +143,14 @@ def register_local_struc_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     
     args_cds_db = parser.add_argument_group('Context database construction options')
     args_cds_db.add_argument('--context-input', dest = 'CFSCDS$input', metavar = 'input',
-                             type = Path, default = Path('.'), help = "Path to folder holding the input files or NCBI package (default: current directory)")
+                             type = Path, default = Path('.'), help = "Path to folder holding the Genbank files or NCBI Genbank package (default: current directory)")
     args_cds_db.add_argument('--context-parsing-mode', dest = 'CFSCDS$mode', metavar = 'mode',
-                             type = str, required = True, choices = ['ncbi-gff', 'ncbi-package', 'bakta-gff', 'tsv'],
-                             help = 'File parsing mode (choices: ncbi-gff, ncbi-package, bakta-gff, tsv).')
+                             type = str, required = True, choices = ['ncbi-gbff', 'ncbi-package', 'bakta-gbff', 'tsv'],
+                             help = 'Context file parsing mode (choices: ncbi-gbff, ncbi-package, bakta-gbff, tsv).')
     
     args_search = parser.add_argument_group('General search options')
     args_search.add_argument('--search-mode', dest = 'CFS$mode', metavar = 'mode', default = 'local',
@@ -444,7 +441,7 @@ def register_local_seq_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-g', '--genomes', dest = 'CBLDB$paths', metavar = 'genomes', type = Path, default = Path,
-                         help = 'Path to folder containing the local genome files to search in. Should contain Genbank files or pairs of Fasta and GFF files. (default: current location).')
+                         help = 'Path to folder containing the local genome Genbank files to search in. (default: current location).')
     
     args_search = parser.add_argument_group('Search options')
     args_search.add_argument('--max-eval', dest = "CBL$max_evalue", metavar = 'max_eval', type = float, default = 1e-3,
@@ -500,9 +497,9 @@ def register_local_seq_derep_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-g', '--genomes', dest = 'CBLDB$paths', metavar = 'genomes', type = Path, default = Path,
-                         help = 'Path to folder containing the local genome files to search in. Should contain Genbank files or pairs of Fasta and GFF files. (default: current location).')
+                         help = 'Path to folder containing the local genome Genbank files to search in. (default: current location).')
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     args_io.add_argument('--keep_temp_derep', dest = "lCCL$keep_intermediate",
                          default = False, action = "store_true", help = "Keep all temporary dereplication data.")
     
@@ -813,12 +810,9 @@ def register_local_extract_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = "output",
                          type = Path, default = Path('.'),
                          help = 'Path to output folder (default: current workdir).')
-    args_io.add_argument('-fna', '--nucleotide-fasta', dest = 'lEXT$nucl_fastas_path', metavar = "nucl_fastas_path",
+    args_io.add_argument('-gb', '--genbanks', dest = 'lEXT$gbffs_path', metavar = "gbffs_path",
                          type = Path, default = None,
-                         help = 'Path to folder with genomic nucleotide fasta files.')
-    args_io.add_argument('-faa', '--protein-fasta', dest = 'lEXT$prot_fastas_path',  metavar = "prot_fastas_path",
-                         type = Path, default = None,
-                         help = "Path to folder with genomic protein fasta files.")
+                         help = 'Path to folder with Genbank files.')
     args_io.add_argument('--prefix', dest = 'lEXT$prefix', metavar = 'prefix', 
                          type = str, default = '',
                          help = "String to start the file name of each cluster with (default: '').")

@@ -282,7 +282,7 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
         categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
     """
     allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
-                        '.gb', '.gbk', '.gb.gz', '.gbk.gz',
+                        '.gb', '.gbk', '.gbff', '.gb.gz', '.gbk.gz', '.gbff.gz',
                         '.gff', '.gff3', '.gff.gz', '.gff3.gz')
     
     ## First connect the I/O arguments of the several tools
