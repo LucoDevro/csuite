@@ -317,9 +317,9 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     cbl_args.force = main_args.force
     cbl_args.output = os.devnull
     cbl_args.query_file = str(cbl_args.query_file)
-    cbl_args.session_file = [str(cblaster_output_folder / 'session.json')]
+    cbl_args.session_file = [str(cblaster_output_folder / 'session.json')] # cblaster expects this in a list
     cbl_args.blast_file = str(cblaster_output_folder / 'blast.txt')
-    cbl_args.databases = [str(cbldb_db_prefix.with_suffix('.dmnd'))]
+    cbl_args.databases = [str(cbldb_db_prefix.with_suffix('.dmnd'))] # cblaster expects this in a list
     
     # CAGEcleaner
     lccl_args.session = Path(cbl_args.session_file[0])
@@ -367,7 +367,7 @@ def setup_remote_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     cbl_args.force = main_args.force
     cbl_args.output = os.devnull
     cbl_args.query_file = str(cbl_args.query_file)
-    cbl_args.session_file = [str(main_output_folder / 'session.json')]
+    cbl_args.session_file = [str(main_output_folder / 'session.json')] # cblaster expects this in a list
     cbl_args.blast_file = str(main_output_folder / 'blast.txt')
     
     # CAGEcleaner
@@ -431,9 +431,9 @@ def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
     cbl_args.force = main_args.force
     cbl_args.output = os.devnull
     cbl_args.query_file = str(cbl_args.query_file)
-    cbl_args.session_file = [str(main_output_folder / 'session.json')]
+    cbl_args.session_file = [str(main_output_folder / 'session.json')] # cblaster expects this in a list
     cbl_args.blast_file = str(main_output_folder / 'blast.txt')
-    cbl_args.databases = [str(cbldb_db_prefix.with_suffix('.dmnd'))]
+    cbl_args.databases = [str(cbldb_db_prefix.with_suffix('.dmnd'))] # cblaster expects this in a list
     
     ## Then parse and validate the argument values
     parsed_args = parse_and_validate_args(categorised_args)
@@ -469,7 +469,7 @@ def setup_remote_seq(categorised_args: dict[argparse.Namespace]) -> dict:
     cbl_args.force = main_args.force
     cbl_args.output = os.devnull
     cbl_args.query_file = str(cbl_args.query_file)
-    cbl_args.session_file = [str(main_output_folder / 'session.json')]
+    cbl_args.session_file = [str(main_output_folder / 'session.json')] # cblaster expects this in a list
     cbl_args.blast_file = str(main_output_folder / 'blast.txt')
     
     ## Then parse and validate the argument values
@@ -970,7 +970,7 @@ def run_report_workflow(parsed_args: dict) -> None:
     if out_args['output_clinker']:
         LOG.info("Writing clinker plot")
         path = out_args['output'] / "clinker.html"
-        plot_clusters(out_args['session'], plot_outfile = path, max_clusters = 10**6)
+        plot_clusters(out_args['session'], plot_outfile = path, max_clusters = None)
         LOG.debug(f'clinker plot written at {str(path)}')
         
     return None

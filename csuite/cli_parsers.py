@@ -222,7 +222,7 @@ def register_remote_struc_derep_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     args_io.add_argument('--keep_temp_derep', dest = "rCCL$keep_intermediate",
                          default = False, action = "store_true", help = "Keep all temporary dereplication data.")
     
@@ -312,7 +312,7 @@ def register_remote_struc_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     
     args_search = parser.add_argument_group('General search options')
     args_search.add_argument('--max-eval', dest = "CFS$max_eval", metavar = 'max_eval',
@@ -570,7 +570,7 @@ def register_remote_seq_derep_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     args_io.add_argument('--keep_temp_derep', dest = "rCCL$keep_intermediate",
                          default = False, action = "store_true", help = "Keep all temporary dereplication data.")
     
@@ -651,7 +651,7 @@ def register_derep_subparser(subparsers):
                          type = Path, default = '.', 
                          help = "[Only relevant for local searches] Path to local genome folder containing genome files. Accepted formats are FASTA and Genbank [.fasta; .fna; .fa; .gbff; .gbk; .gb]. Files can be gzipped. (default: current working directory)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     args_io.add_argument('--keep_temp_derep', dest = "CCL$keep_intermediate",
                          default = False, action = "store_true", help = "Keep all temporary dereplication data.")
     
@@ -701,7 +701,7 @@ def register_report_subparser(subparsers):
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
-                         type = Path, default = tempfile.gettempdir(), help = "Path to store temporary files (default: your OS's default temporary directory).")
+                         type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     
     args_outputs = parser.add_argument_group('Output types')
     args_outputs.add_argument('--summary', dest = 'OUT$output_summary',
