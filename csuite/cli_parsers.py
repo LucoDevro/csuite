@@ -400,7 +400,7 @@ def register_remote_seq_subparser(subparsers):
                              help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
     args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
                              help = "Minimum different queries covered by a cluster (default: 2).")
-    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+    args_search.add_argument("--min-hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
                              help = "Minimum number of members in a cluster (default: 2).")
     args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
                              help = "Queries that have to present in a cluster (default: None).")
@@ -440,7 +440,7 @@ def register_local_seq_subparser(subparsers):
                          required = True, type = Path, help = "Path to the query sequence fasta file.")
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
-    args_io.add_argument('-g', '--genomes', dest = 'CBLDB$paths', metavar = 'genomes', type = Path, default = Path,
+    args_io.add_argument('-gb', '--genbanks', dest = 'CBLDB$paths', metavar = 'genbanks', type = Path, default = Path,
                          help = 'Path to folder containing the local genome Genbank files to search in. (default: current location).')
     
     args_search = parser.add_argument_group('Search options')
@@ -454,7 +454,7 @@ def register_local_seq_subparser(subparsers):
                              help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
     args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
                              help = "Minimum different queries covered by a cluster (default: 2).")
-    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+    args_search.add_argument("--min-hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
                              help = "Minimum number of members in a cluster (default: 2).")
     args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
                              help = "Queries that have to present in a cluster (default: None).")
@@ -496,7 +496,7 @@ def register_local_seq_derep_subparser(subparsers):
                          required = True, type = Path, help = "Path to the query sequence fasta file.")
     args_io.add_argument('-o', '--output', dest = 'MAIN$output', metavar = 'output',
                          type = Path, default = Path('.'), help = "Output directory (default: current location)")
-    args_io.add_argument('-g', '--genomes', dest = 'CBLDB$paths', metavar = 'genomes', type = Path, default = Path,
+    args_io.add_argument('-gb', '--genbanks', dest = 'CBLDB$paths', metavar = 'genbanks', type = Path, default = Path,
                          help = 'Path to folder containing the local genome Genbank files to search in. (default: current location).')
     args_io.add_argument('-t', '--temp', dest = "MAIN$temp", metavar = 'temp',
                          type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
@@ -514,7 +514,7 @@ def register_local_seq_derep_subparser(subparsers):
                              help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
     args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
                              help = "Minimum different queries covered by a cluster (default: 2).")
-    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+    args_search.add_argument("--min-hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
                              help = "Minimum number of members in a cluster (default: 2).")
     args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
                              help = "Queries that have to present in a cluster (default: None).")
@@ -590,7 +590,7 @@ def register_remote_seq_derep_subparser(subparsers):
                              help = "Maximum intergenic gap within a cluster (in bp) (default: 5000).")
     args_search.add_argument("--min-cov-qrs", dest = "CBL$unique", metavar = 'min_cov_qrs', type = int, default = 2,
                              help = "Minimum different queries covered by a cluster (default: 2).")
-    args_search.add_argument("--min_hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
+    args_search.add_argument("--min-hits", dest = "CBL$min_hits", metavar = 'min_hits', type = int, default = 2,
                              help = "Minimum number of members in a cluster (default: 2).")
     args_search.add_argument('--require', dest = "CBL$require", metavar = 'require', type = str, default = '', nargs = '*',
                              help = "Queries that have to present in a cluster (default: None).")
