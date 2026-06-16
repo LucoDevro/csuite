@@ -284,9 +284,11 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     Mutates:
         categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
     """
-    allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
-                        '.gb', '.gbk', '.gbff', '.gb.gz', '.gbk.gz', '.gbff.gz',
-                        '.gff', '.gff3', '.gff.gz', '.gff3.gz')
+    allowed_suffices = {'.fna', '.fasta', '.fa',
+                        '.gb', '.gbk', '.gbff',
+                        '.gff', '.gff3',
+                        '.gz'
+                        }
     
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
@@ -302,7 +304,7 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     # cblaster makedb
     # catch a FileNotFoundError if the genome folder does not exist; cannot be postponed until validation time
     try:
-        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if p.suffix in allowed_suffices]
+        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if set(p.suffixes) < allowed_suffices]
     except FileNotFoundError:
         msg = f'Genome folder not found: {cbldb_args.paths}'
         LOG.critical(msg)
@@ -401,9 +403,11 @@ def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
     Mutates:
         categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
     """
-    allowed_suffices = ('.fna', '.fasta', '.fa', '.fna.gz', '.fasta.gz', '.fa.gz',
-                        '.gb', '.gbk', '.gb.gz', '.gbk.gz',
-                        '.gff', '.gff3', '.gff.gz', '.gff3.gz')
+    allowed_suffices = {'.fna', '.fasta', '.fa',
+                        '.gb', '.gbk', 'gbff',
+                        '.gff', '.gff3',
+                        '.gz'
+                        }
     
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
@@ -416,7 +420,7 @@ def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
     # cblaster makedb
     # catch a FileNotFoundError if genome folder does not exist; cannot be postponed until validation time
     try:
-        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if p.suffix in allowed_suffices]
+        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if set(p.suffixes) < allowed_suffices]
     except FileNotFoundError:
         msg = f'Genome folder not found: {cbldb_args.paths}'
         LOG.critical(msg)
