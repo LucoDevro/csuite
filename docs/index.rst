@@ -31,21 +31,27 @@ csuite
 
 *csuite: Streamlined workflows for query-based gene cluster mining.*
 
-The **csuite** provides easy-access commands for query-based gene cluster mining. It wraps several query-based gene cluster mining and processing tools into end-to-end workflows, removing the file and settings plumbing overhead. **cblaster** provides sequence-based gene cluster mining functionalities, while **cfoldseeker** is its protein structure-based sister tool. **CAGEcleaner** reduces redundancy in the resulting hit sets while respecting both the gene cluster and the host taxonomic diversity. **clinker** generates interactive visualisations of the hit sets.
+The **csuite** provides easy-to-use one-go commands for query-based gene cluster mining. It wraps several mining and processing tools into end-to-end workflows, removing the sizeable file and settings plumbing overhead.
+
+The **csuite** bundles the following tools
+	- **cblaster** - sequence similarity-based gene cluster mining
+	- **cfoldseeker** - protein structure similarity-based gene cluster mining
+	- **CAGEcleaner** - hit redundancy removal with respect for both gene cluster and host diversity
+	- **clinker** - interactive gene cluster visualisations.
 
 .. tip::
 
-   The **csuite** workflows are similar in design philosophy as MMseqs2's and FoldSeek's easy-* combo commands!
+   The **csuite** workflows are similar in design philosophy as **MMseqs2**'s and **FoldSeek**'s ``easy-*`` combo commands!
 
-   For more fine-grained settings, you can run the member tools of the **csuite** separately. You can just call them from inside **csuite**'s conda environment.
+   For more fine-grained settings, you can still run the member tools of the **csuite** separately. You can just call them inside **csuite**'s conda environment or Docker container.
 
-The **csuite** supports the several workflows listed below.
+The **csuite** currently supports the workflows listed below.
 
 1. ``local_struc_derep``: Local structure-based search with hit dereplication
 	- Local context database construction using ``cfoldseeker-cds``
 	- Structure-based search in local mode using ``cfoldseeker``
 	- Hit dereplication in local mode using ``CAGEcleaner``
-2. ``local_struct``: Local structure-based search
+2. ``local_struc``: Local structure-based search
 	- Local context database construction using ``cfoldseeker-cds``
 	- Structure-based search in local mode using ``cfoldseeker``
 3. ``remote_struc_derep``: Remote structure-based search with hit dereplication
@@ -66,9 +72,14 @@ The **csuite** supports the several workflows listed below.
 8. ``remote_seq``: Remote sequence-based search
 	- Sequence-based search in remote mode using ``cblaster search``
 9. ``derep``: Hit dereplication
-	- Hit dereplication using ``CAGEcleaner`` (mode derived from session)
-10. ``output``: Generate outputs for an existing session
-	- Alignment visualisation using ``clinker``, ``cblaster``-style output files (summary, binary, plot)
+	- Hit dereplication using ``CAGEcleaner`` (unified interface for all search modes)
+10. ``report``: Generate reports for an existing session
+	- Generating summary, plot and binary table files using ``cblaster``
+	- Alignment visualisation using ``clinker``
+11. ``remote_extract``: Export cluster Genbank files from a remote mode search session
+	- Generate cluster Genbank files for an existing session using ``cblaster extract_clusters``
+12. ``local_extract``: Export cluster Genbank files from a local mode search session
+	- Generate cluster Genbank files for an existing session using ``cfoldseeker-seqs``
 
 References and citations
 =========================

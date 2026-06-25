@@ -44,7 +44,7 @@ There is no entrypoint set up so running csuite requires prepending your csuite 
 
 .. code-block:: bash
 
-	docker run lucodevro/csuite -v <some-input-file-or-folder>:<path-you-want-it-inside-the-container> csuite [-<flags>] [arguments]
+	docker run lucodevro/csuite -v <some-input-file-or-folder>:<path-you-want-it-inside-the-container> csuite [workflow] [-<flags>] [arguments]
 
 GitHub
 -------
@@ -66,5 +66,5 @@ csuite is also installable from PyPi using pip, yet we do not recommend using th
 
 .. warning::
    
-   We do not recommend using this approach as key non-Python dependencies are not available from PyPi and therefore should be installed differently.
+   We do not recommend using this approach as key non-Python dependencies are not available from PyPi and therefore should be installed separately.
 
