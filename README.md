@@ -12,7 +12,7 @@ The `csuite` is an **orchestrator tool** that integrates several query-based gen
 > [!TIP]
 > The `csuite` bundles several stand-alone gene cluster mining and processing tools. Its workflow commands have a similar design philosophy as MMseqs2's and FoldSeek's easy-* commands. They are end-to-end workflows with a reduced number of options, while the stand-alone tools provide more fine-grained control of the settings. By installing `csuite`, you install all these tools at once!
 
-![workflow](workflow.png)
+![workflows](csuite_workflows_animated.gif)
 
 ## Features
 
