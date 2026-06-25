@@ -1,6 +1,6 @@
 # csuite
 
-[![Docs](https://img.shields.io/readthedocs/csuite-miner/latest?style=flat-square&maxAge=600&logo=readthedocs)](https://csuite-miner.readthedocs.io/en/latest/)
+[![Docs](https://img.shields.io/readthedocs/csuite-miner/latest?style=flat-square&maxAge=600&logo=readthedocs)](https://csuite-mining.readthedocs.io/en/latest/)
 [![Downloads](https://anaconda.org/bioconda/csuite/badges/downloads.svg)](https://bioconda.github.io/recipes/csuite/README.html#download-stats)
 [![Bioconda](https://img.shields.io/conda/vn/bioconda/csuite?style=flat-square&maxAge=3600&logo=anaconda)](https://anaconda.org/bioconda/csuite)
 [![Docker Image Version](https://img.shields.io/docker/v/lucodevro/csuite?sort=semver&label=docker&logo=docker)](https://hub.docker.com/r/lucodevro/csuite)

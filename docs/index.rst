@@ -15,7 +15,7 @@ csuite
 |pypi|
 
 .. |docs| image:: https://img.shields.io/readthedocs/csuite-miner/latest?style=flat-square&maxAge=600&logo=readthedocs
-   :target: https://csuite-miner.readthedocs.io/en/latest/
+   :target: https://csuite-mining.readthedocs.io/en/latest/
 
 .. |bioconda| image:: https://img.shields.io/conda/vn/bioconda/csuite?style=flat-square&maxAge=3600&logo=anaconda
    :target: https://anaconda.org/bioconda/csuite
