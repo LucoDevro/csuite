@@ -7,10 +7,10 @@
 [![PyPI version](https://img.shields.io/pypi/v/csuite?sort=semver&logo=pypi)](https://pypi.org/project/csuite/)
 
 ## Description
-The `csuite` is an **orchestrator tool** that integrates several query-based gene cluster mining tools into streamlined end-to-end workflows, removing the file plumbing and settings transferring overhead. It supports both **searches using sequence or protein structure similarity**, **dereplicates hit sets** with respect for both gene cluster and host taxonomic diversity, and makes attractive alignments and **visualisations**.
+The `csuite` is an **orchestrator tool** that integrates several query-based gene cluster mining tools into streamlined end-to-end workflows, removing the sizeable file plumbing and settings transferring overhead. It supports both **searches using sequence or protein structure similarity**, **dereplicates hit sets** respecting both gene cluster and host diversity, and makes attractive alignments and **visualisations**.
 
 > [!TIP]
-> The `csuite` bundles several stand-alone gene cluster mining tools. Its workflow commands have a similar design philosophy as MMseqs2's and FoldSeek's easy-* commands. They are end-to-end workflows with a reduced number of options, while the stand-alone tools provide more fine-grained control of the settings. By installing `csuite`, you install all these tools at once!
+> The `csuite` bundles several stand-alone gene cluster mining and processing tools. Its workflow commands have a similar design philosophy as MMseqs2's and FoldSeek's easy-* commands. They are end-to-end workflows with a reduced number of options, while the stand-alone tools provide more fine-grained control of the settings. By installing `csuite`, you install all these tools at once!
 
 ![workflow](workflow.png)
 
@@ -20,9 +20,10 @@ The `csuite` is an **orchestrator tool** that integrates several query-based gen
 - Query-based gene cluster mining using protein structure similarity (driven by [`cfoldseeker`](https://github.com/LucoDevro/cfoldseeker)).
 - Dereplicating hit sets with respect for both gene cluster and host taxonomic diversity (driven by [`CAGEcleaner`](https://github.com/LucoDevro/CAGEcleaner)).
 - Attractive interactive gene cluster alignment visualisations (driven by [`clinker`](https://github.com/gamcil/clinker)).
-- Multiple workflow commands to facilitate each combination of search mode and data source.
+- Multiple workflows to facilitate each combination of search mode and data source.
 - Support for both local and remote search modes (such as NCBI nr, or AlphaFoldDB, resp.).
 - Automatic genomic context database construction from sets of protein sequences or structures (driven by `cblaster makedb`, or `cfoldseeker-cds`).
+- Support for extracting gene cluster Genbank files (driven by `cblaster extract_clusters`, or `cfoldseeker-seqs`).
 
 ## Installation, documentation and more
 For installation instructions, usage, explanations and more, head over to the [`csuite` docs](https://csuite-miner.readthedocs.io/en/latest/)!
@@ -31,7 +32,7 @@ For installation instructions, usage, explanations and more, head over to the [`
 If you found `csuite` useful, please cite our manuscript:
 
 ```
-De Vrieze, L., Masschelein, J. (2025) In preparation
+De Vrieze, L., Masschelein, J. (2026) In preparation
 ```
 
 The `csuite` member tools rely heavily on the following tools, so please give these proper credit as well:
