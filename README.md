@@ -1,6 +1,6 @@
 # csuite
 
-[![Docs](https://img.shields.io/readthedocs/csuite-miner/latest?style=flat-square&maxAge=600&logo=readthedocs)](https://csuite-mining.readthedocs.io/en/latest/)
+[![Docs](https://img.shields.io/readthedocs/csuite-mining/latest?style=flat-square&maxAge=600&logo=readthedocs)](https://csuite-mining.readthedocs.io/en/latest/)
 [![Downloads](https://anaconda.org/bioconda/csuite/badges/downloads.svg)](https://bioconda.github.io/recipes/csuite/README.html#download-stats)
 [![Bioconda](https://img.shields.io/conda/vn/bioconda/csuite?style=flat-square&maxAge=3600&logo=anaconda)](https://anaconda.org/bioconda/csuite)
 [![Docker Image Version](https://img.shields.io/docker/v/lucodevro/csuite?sort=semver&label=docker&logo=docker)](https://hub.docker.com/r/lucodevro/csuite)
@@ -31,7 +31,7 @@ The `csuite` is an **orchestrator tool** that integrates several query-based gen
 - Support for extracting gene cluster Genbank files (driven by `cblaster extract_clusters`, or `cfoldseeker-seqs`).
 
 ## Installation, documentation and more
-For installation instructions, usage, explanations and more, head over to the [`csuite` docs](https://csuite-miner.readthedocs.io/en/latest/)!
+For installation instructions, usage, explanations and more, head over to the [`csuite` docs](https://csuite-mining.readthedocs.io/en/latest/)!
 
 ## Citations
 If you found `csuite` useful, please cite our manuscript:
