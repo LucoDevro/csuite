@@ -704,13 +704,13 @@ def register_report_subparser(subparsers):
                          type = Path, default = Path(tempfile.gettempdir()), help = "Path to store temporary files (default: your OS's default temporary directory).")
     
     args_outputs = parser.add_argument_group('Output types')
-    args_outputs.add_argument('--summary', dest = 'OUT$output_summary',
+    args_outputs.add_argument('--no-summary', dest = 'OUT$output_summary',
                               default = True, action = 'store_false', help = "Write cblaster summary file (default: True).")
-    args_outputs.add_argument('--binary', dest = 'OUT$output_binary',
+    args_outputs.add_argument('--no-binary', dest = 'OUT$output_binary',
                               default = True, action = 'store_false', help = "Write cblaster binary file (tab-separated) (default: True).")
-    args_outputs.add_argument('--plot', dest = 'OUT$output_plot',
+    args_outputs.add_argument('--no-plot', dest = 'OUT$output_plot',
                               default = True, action = 'store_false', help = "Write cblaster clusterplot file (default: True).")
-    args_outputs.add_argument('--clinker', dest = 'OUT$output_clinker',
+    args_outputs.add_argument('--no-clinker', dest = 'OUT$output_clinker',
                               default = True, action = 'store_false', help = "Write clinker plot file (default: True).")
     
     return None
