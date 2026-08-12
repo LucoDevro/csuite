@@ -284,11 +284,6 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     Mutates:
         categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
     """
-    allowed_suffices = {'.fna', '.fasta', '.fa',
-                        '.gb', '.gbk', '.gbff',
-                        '.gff', '.gff3',
-                        '.gz'
-                        }
     
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
@@ -302,13 +297,6 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     cbldb_db_prefix = main_output_folder / 'cblaster_makedb' / 'local_db'
     
     # cblaster makedb
-    # catch a FileNotFoundError if the genome folder does not exist; cannot be postponed until validation time
-    try:
-        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if set(p.suffixes) < allowed_suffices]
-    except FileNotFoundError:
-        msg = f'Genome folder not found: {cbldb_args.paths}'
-        LOG.critical(msg)
-        raise FileNotFoundError(msg)
     cbldb_args.database = str(cbldb_db_prefix)
     cbldb_args.force = main_args.force
     cbldb_args.cpus = main_args.cores
@@ -327,7 +315,7 @@ def setup_local_seq_derep(categorised_args: dict[argparse.Namespace]) -> dict:
     lccl_args.session = Path(cbl_args.session_file[0])
     lccl_args.output = main_output_folder / 'cagecleaner'
     lccl_args.temp = main_temp_folder
-    lccl_args.genome_dir = Path(cbldb_args.paths[0]).parent
+    lccl_args.genome_dir = cbldb_args.paths
     lccl_args.cores = main_args.cores
     lccl_args.force = main_args.force
     lccl_args.verbosity = main_args.verbosity
@@ -403,11 +391,6 @@ def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
     Mutates:
         categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
     """
-    allowed_suffices = {'.fna', '.fasta', '.fa',
-                        '.gb', '.gbk', 'gbff',
-                        '.gff', '.gff3',
-                        '.gz'
-                        }
     
     ## First connect the I/O arguments of the several tools
     main_args = categorised_args['MAIN']
@@ -418,13 +401,6 @@ def setup_local_seq(categorised_args: dict[argparse.Namespace]) -> dict:
     cbldb_db_prefix = main_args.output / 'cblaster_makedb' / 'local_db'
     
     # cblaster makedb
-    # catch a FileNotFoundError if genome folder does not exist; cannot be postponed until validation time
-    try:
-        cbldb_args.paths = [str(p) for p in cbldb_args.paths.iterdir() if set(p.suffixes) < allowed_suffices]
-    except FileNotFoundError:
-        msg = f'Genome folder not found: {cbldb_args.paths}'
-        LOG.critical(msg)
-        raise FileNotFoundError(msg)
     cbldb_args.database = str(cbldb_db_prefix)
     cbldb_args.force = main_args.force
     cbldb_args.cpus = main_args.cores

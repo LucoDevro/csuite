@@ -134,10 +134,45 @@ def validate_cblaster_makedb_args(args: argparse.Namespace) -> dict:
     Returns:
         parsed_args (dict): dictionary of argument name-value pairs
     """
+    
+    allowed_suffices = {'.fna', '.fasta', '.fa',
+                        '.gb', '.gbk', '.gbff',
+                        '.gff', '.gff3',
+                        '.gz'
+                        }
+    
     if not(args.cpus > 0):
         raise ValueError('Number of cores must be strictly positive.')
     
-    # Output directory can already exist if force flag is on
+    ## filenames with flexible suffix checker --
+    # catch a FileNotFoundError if genome folder does not exist
+    # account for version digits in filenames by discarding the first suffixes one by one when checking for valid suffixes
+    try:
+        paths = []
+        for p in args.paths.iterdir():
+            # Start by including all suffixes
+            suff_excl = 0
+            suffixes = set(p.suffixes[suff_excl:])
+            # Keep discarding suffixes if the suffix set is not a full subset of the valid ones
+            while suffixes and not(suffixes < allowed_suffices):
+                suff_excl += 1
+                suffixes = set(p.suffixes[suff_excl:])
+            # If no suffixes left, your filename didn't end with a valid one, so we can't process it.
+            if not(suffixes):
+                msg = f'Genbank file {p} does not have valid suffixes. Aborting.'
+                LOG.critical(msg)
+                raise RuntimeError(msg)
+            # If we have a full suffix subset while still having suffixes left, we have valid files
+            paths.append(str(p))
+            
+        args.paths = paths
+    # In case the folder does not exist
+    except FileNotFoundError:
+        msg = f'Genome folder not found: {args.paths}'
+        LOG.critical(msg)
+        raise FileNotFoundError(msg)
+    
+    ## Output directory can already exist if force flag is on
     try:
         Path(args.database).parent.mkdir(parents = True) # Parent since this is a prefix
     except FileExistsError as err:
@@ -148,7 +183,7 @@ def validate_cblaster_makedb_args(args: argparse.Namespace) -> dict:
             LOG.error(msg)
             raise err
     
-    # Parse and return
+    ## Parse and return
     return vars(args)
 
 
