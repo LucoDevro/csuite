@@ -705,13 +705,13 @@ def register_report_subparser(subparsers):
     
     args_outputs = parser.add_argument_group('Output types')
     args_outputs.add_argument('--no-summary', dest = 'OUT$output_summary',
-                              default = True, action = 'store_false', help = "Write cblaster summary file (default: True).")
+                              default = True, action = 'store_false', help = "Don't generate a cblaster summary file (default: False).")
     args_outputs.add_argument('--no-binary', dest = 'OUT$output_binary',
-                              default = True, action = 'store_false', help = "Write cblaster binary file (tab-separated) (default: True).")
+                              default = True, action = 'store_false', help = "Don't generate a cblaster binary file (tab-separated) (default: False).")
     args_outputs.add_argument('--no-plot', dest = 'OUT$output_plot',
-                              default = True, action = 'store_false', help = "Write cblaster clusterplot file (default: True).")
+                              default = True, action = 'store_false', help = "Don't generate a cblaster clusterplot file (default: False).")
     args_outputs.add_argument('--no-clinker', dest = 'OUT$output_clinker',
-                              default = True, action = 'store_false', help = "Write clinker plot file (default: True).")
+                              default = True, action = 'store_false', help = "Don't generate a clinker plot file (default: False).")
     
     return None
 
