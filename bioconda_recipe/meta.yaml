@@ -7,7 +7,7 @@ package:
 
 source:
   url: "https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: TODO
+  sha256: 3f80fcffacb57b55c4f6c228790eabb77d27078444a5c06bbfc8c7407d8c3e33
 
 build:
   number: 0
@@ -25,9 +25,9 @@ requirements:
     - setuptools
   run:
     - python >=3.12
-    - cblaster >=1.4.0
-    - cagecleaner >=1.5.1
-    - cfoldseeker >=0.1.0
+    - cblaster <=1.4.0
+    - cagecleaner >=1.5.2
+    - cfoldseeker >=0.2.0
 
 test:
   commands:
