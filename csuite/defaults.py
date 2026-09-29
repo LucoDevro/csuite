@@ -45,6 +45,8 @@ class cfoldseekerDefaultConfiguration():
         self.local_db_path = Path('local_db/local_db')
         self.cds_db_path = Path('local_cds_db.gz')
         self.seq_clusters = Path('cluster_clustered.tsv')
+        self.reuse_search = None
+        self.gpu = False
         
 
 class cfoldseekerCDSDefaultConfiguration():
@@ -88,9 +90,9 @@ class CAGEcleanerDefaultConfiguration():
         self.coverage = 80.0
         self.low_mem = False
         self.margin = 0
-        self.strict_regions = False
-        self.no_recovery_by_content = False
-        self.no_recovery_by_score = False
+        self.strict_regions = True
+        self.recover_content = False
+        self.recover_score = False
         self.zscore_outlier_threshold = 2.0
         self.minimal_score_difference = 0.1
         
