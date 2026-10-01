@@ -43,7 +43,7 @@ The **csuite** bundles the following tools
 
    The **csuite** workflows are similar in design philosophy as **MMseqs2**'s and **FoldSeek**'s ``easy-*`` combo commands!
 
-   For more fine-grained settings, you can still run the member tools of the **csuite** separately. You can just call them inside **csuite**'s conda environment or Docker container.
+   For more fine-grained settings, you can still run the member tools of the **csuite** independently. You can just call them inside **csuite**'s conda environment or Docker container.
 
 The **csuite** currently supports the workflows listed below.
 

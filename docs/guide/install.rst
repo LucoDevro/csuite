@@ -34,17 +34,17 @@ Then start using it by activating the conda environment.
 Docker
 -------
 
-csuite is also available as a Docker image from DockerHub. This is one of the recommended ways to run csuite on Windows (the other one being running it using Windows' WSL feature).
+csuite is also available as a Docker image from DockerHub. This is one of the recommended ways to run csuite on Windows (the other one being running it using Windows' WSL feature). Run the following command to pull the container, adding one of the `possible version tags <https://quay.io/repository/biocontainers/csuite?tab=tags>`_.
 
 .. code-block:: bash
 
-	docker pull lucodevro/csuite
+	docker pull quay.io/repository/biocontainers/csuite:<tag>
 
 There is no entrypoint set up so running csuite requires prepending your csuite command with the appropriate Docker commands.
 
 .. code-block:: bash
 
-	docker run lucodevro/csuite -v <some-input-file-or-folder>:<path-you-want-it-inside-the-container> csuite [workflow] [-<flags>] [arguments]
+	docker run quay.io/repository/biocontainers/csuite:<tag> -v <some-input-file-or-folder>:<path-you-want-it-inside-the-container> csuite [workflow] [-<flags>] [arguments]
 
 GitHub
 -------
@@ -58,7 +58,7 @@ Alternatively, it is possible to install the latest semi-stable development vers
 PyPi
 ------
 
-csuite is also installable from PyPi using pip, yet we do not recommend using this approach as several core dependencies are not available from PyPi, and therefore should be installed in another way. So either make sure you have installed it separately, or use one of the other installation options.
+csuite is also installable from PyPi using pip.
 
 .. code-block:: bash
 
@@ -66,5 +66,5 @@ csuite is also installable from PyPi using pip, yet we do not recommend using th
 
 .. warning::
    
-   We do not recommend using this approach as key non-Python dependencies are not available from PyPi and therefore should be installed separately.
+   We do not recommend using this approach as key non-Python dependencies are not available from PyPi and therefore should be installed separately. Take a look at the dependencies of cblaster, cfoldseeker and CAGEcleaner.
 

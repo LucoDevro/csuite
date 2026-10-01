@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "csuite"
-version = "0.1.0"
-description = "Streamlined workflows for sequence and structure similarity-based gene cluster mining"
+version = "0.2.0"
+description = "Streamlined workflows for sequence and protein structure similarity-based gene cluster mining"
 
 authors = [
     {name = "Lucas De Vrieze", email = "lucas.devrieze@kuleuven.be"},
@@ -22,9 +22,9 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 dependencies = [
-    "cblaster >=1.4.0",
-    "cagecleaner >= 1.5.1",
-    "cfoldseeker >= 0.1.0",
+    "cblaster == 1.4.0",
+    "cagecleaner >= 1.6.0",
+    "cfoldseeker >= 0.3.0",
 ]
 
 readme = "README.md"
@@ -36,7 +36,7 @@ license = {text = "MIT"}
 [project.optional-dependencies]
 doc = [
     "sphinx",
-    "sphinx_rtd_theme",
+    "pydata-sphinx-theme",
 ]
 
 [project.scripts]
