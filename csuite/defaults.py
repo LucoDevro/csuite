@@ -160,7 +160,7 @@ class cblasterSearchDefaultConfiguration():
         self.recompute = False
         self.blast_file = None
         self.ipg_file = None
-        self.hitlist_size = 2000
+        self.hitlist_size = 1e9
         self.cpus = 1
         self.intermediate_genes = False
         self.intermediate_gene_distance = 5000
