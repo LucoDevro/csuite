@@ -898,10 +898,10 @@ def run_derep_workflow(parsed_args: dict) -> None:
         case ('remote', 'regions'):
             LOG.info('Entering remote region mode')
             ccl_run = RemoteRegionRun(ccl_args)
-        case ('local', 'genomes') | ('hmm', 'genomes'):
+        case ('local', 'genomes') | ('local_clustered', 'genomes') | ('hmm', 'genomes'):
             LOG.info('Entering local genome mode')
             ccl_run = LocalGenomeRun(ccl_args)
-        case ('local', 'regions') | ('hmm', 'regions'):
+        case ('local', 'regions') | ('local_clustered', 'regions') | ('hmm', 'regions'):
             LOG.info('Entering local region mode')
             ccl_run = LocalRegionRun(ccl_args)
             
