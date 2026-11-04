@@ -104,7 +104,17 @@ class mainDefaultConfiguration():
     def __init__(self):
         self.output = Path('.')
         self.temp = Path(tempfile.gettempdir())
-    
+        self.verbosity = 3
+        self.force = False
+        
+        
+class mergeDefaultConfiguration():
+    """
+    Data class for the default argument values of the session merge workflow.
+    """
+    def __init__(self):
+        self.output = Path('merged_session.json')
+
 
 class reportDefaultConfiguration():
     """

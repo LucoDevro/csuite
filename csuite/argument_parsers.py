@@ -9,6 +9,7 @@ from csuite.validators import (validate_report_args,
                                validate_cblaster_search_args,
                                validate_cblaster_makedb_args,
                                validate_remote_extract_args,
+                               validate_merge_args,
                                )
 from cfoldseeker.main import parse_and_validate_arguments as cfs_arg_validator
 from cfoldseeker.build_cds_db import parse_and_validate_arguments as cfscds_arg_validator
@@ -23,6 +24,7 @@ from csuite.defaults import (cfoldseekerDefaultConfiguration,
                              cblasterSearchDefaultConfiguration,
                              cblasterMakedbDefaultConfiguration,
                              extractDefaultConfiguration,
+                             mergeDefaultConfiguration,
                              )
 
 
@@ -40,7 +42,8 @@ WORKFLOW_TOOLS = {'remote_struc': ['MAIN', 'CFS'],
                   'derep': ['MAIN', 'CCL'],
                   'report': ['MAIN', 'OUT'],
                   'remote_extract': ['MAIN', 'rEXT'],
-                  'local_extract': ['MAIN', 'lEXT']
+                  'local_extract': ['MAIN', 'lEXT'],
+                  'merge': ['MAIN', 'MERGE'],
                   }
 
 # Define the default argument values for each tool
@@ -55,6 +58,7 @@ TOOL_DEFAULT_CONFS = {'MAIN': mainDefaultConfiguration(),
                       'CBLDB': cblasterMakedbDefaultConfiguration(),
                       'rEXT': extractDefaultConfiguration(),
                       'lEXT': extractDefaultConfiguration(),
+                      'MERGE': mergeDefaultConfiguration(),
                       }
 
 # Define the validator function for each tool
@@ -69,6 +73,7 @@ TOOL_ARG_VALIDATORS = {'MAIN': vars, # No validation for main args, just parsing
                        'CBLDB': validate_cblaster_makedb_args,
                        'rEXT': validate_remote_extract_args,
                        'lEXT': cfsext_arg_validator,
+                       'MERGE': validate_merge_args,
                        }
 
 
