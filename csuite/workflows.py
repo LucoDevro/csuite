@@ -4,8 +4,10 @@
 import argparse
 import logging
 import inspect
+import operator
 import os
 from pathlib import Path
+from cblaster.extract_clusters import get_sorted_cluster_hierarchies
 
 from csuite.argument_parsers import parse_and_validate_args
 from cfoldseeker.build_cds_db import run_workflow as cfscds_workflow
@@ -69,6 +71,8 @@ def setup_workflow(workflow_name: str, categorised_args: dict[argparse.Namespace
             setup = setup_remote_extract
         case 'local_extract':
             setup = setup_local_extract
+        case 'merge':
+            setup = setup_merge
         case _:
             raise ValueError('Unknown workflow name!')
     
@@ -595,6 +599,35 @@ def setup_local_extract(categorised_args: dict[argparse.Namespace]) -> dict:
     parsed_args = parse_and_validate_args(categorised_args)
     
     return parsed_args
+
+
+def setup_merge(categorised_args: dict[argparse.Namespace]) -> dict:
+    """
+    Set up a session merge workflow.
+    
+    Sets shared arguments, and connects input and output file paths passed on by the different tools of the workflow.
+    
+    Args:
+        categorised_args (dict[argparse.Namespace]): dictionary of unparsed argument namespaces per tool
+            involved in the workflow. Typical output of categorise_args() of the argument_parsers module.
+            
+    Returns:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+                        
+    Mutates:
+        categorised_args: Argument values are updated to connect the several inputs and outputs between tools.
+    """
+    ## First copy over the relevant main arguments to the workflow arguments
+    main_args = categorised_args['MAIN']
+    merge_args = categorised_args['MERGE']
+    
+    merge_args.force = main_args.force
+    merge_args.verbosity = main_args.verbosity
+    
+    ## Then parse and validate the argument values
+    parsed_args = parse_and_validate_args(categorised_args)
+    
+    return parsed_args
     
 
 def run_workflow(workflow_name: str, parsed_args: dict) -> None:
@@ -635,6 +668,8 @@ def run_workflow(workflow_name: str, parsed_args: dict) -> None:
             run = run_remote_extract_workflow
         case 'local_extract':
             run = run_local_extract_workflow
+        case 'merge':
+            run = run_merge_workflow
         case _:
             raise ValueError('Unknown workflow name!')
         
@@ -898,10 +933,10 @@ def run_derep_workflow(parsed_args: dict) -> None:
         case ('remote', 'regions'):
             LOG.info('Entering remote region mode')
             ccl_run = RemoteRegionRun(ccl_args)
-        case ('local', 'genomes') | ('hmm', 'genomes'):
+        case ('local', 'genomes') | ('local_clustered', 'genomes') | ('hmm', 'genomes'):
             LOG.info('Entering local genome mode')
             ccl_run = LocalGenomeRun(ccl_args)
-        case ('local', 'regions') | ('hmm', 'regions'):
+        case ('local', 'regions') | ('local_clustered', 'regions') | ('hmm', 'regions'):
             LOG.info('Entering local region mode')
             ccl_run = LocalRegionRun(ccl_args)
             
@@ -996,5 +1031,44 @@ def run_local_extract_workflow(parsed_args: dict) -> None:
     
     cfs_extract(lext_args)
             
+    return None
+
+
+def run_merge_workflow(parsed_args: dict) -> None:
+    """
+    Merge a number of existing sessions.
+    
+    Loads and concatenates the existing sessions using existing cblaster methods,
+    and immediately saves them as a merged session file.
+    
+    Args:
+        parsed_args (dict): dictionary of dictionaries of argument name-value pairs, grouped by tool involved in a workflow.
+    
+    Returns:
+        None
+    """
+    merge_args = parsed_args['MERGE']
+    session_files = merge_args['sessions']
+    merged_session_path = merge_args['output']
+    
+    # First concatenate the sessions
+    LOG.info('Concatenating session files')
+    LOG.debug(f'Session files being concatenated: {",".join(map(str, session_files))}')
+    merged_session = Session.from_files(session_files)
+    
+    # Renumber the clusters by score
+    LOG.info('Renumbering the clusters')
+    score_getter = operator.attrgetter('score')
+    old_clusters = [element[0] for element in get_sorted_cluster_hierarchies(merged_session, max_clusters = None)]
+    sorted_clusters = sorted(old_clusters, key = score_getter, reverse = True)
+    for idx, cl in enumerate(sorted_clusters):
+        cl.number = idx+1 # 1-indexing
+    
+    # Save the new session    
+    LOG.info('Writing merged session')
+    with open(merged_session_path, 'w') as handle:
+        merged_session.to_json(handle)
+    LOG.debug(f'Merged session written at {str(merged_session_path)}')
+    
     return None
 

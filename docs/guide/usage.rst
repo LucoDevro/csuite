@@ -15,13 +15,13 @@ Remote searches
 
 Remote runs are the easiest to get started.
 
-For **structure-based searches** against the AFDB50 database at default settings, run the ``remote_struc`` workflow.
+For **structure-based searches** against the AFDB50 database at default settings, run the ``remote_struc`` workflow. *Don't forget to download the UniProt ID mapping table!*
 
 .. code-block:: bash
 
 	csuite remote_struc -q <query-folder> -uma <UniProt-ID-mapping-table>
 
-To **include hit dereplication** at default settings (genome-based at 99% identity and 80% coverage), run the ``remote_struc_derep`` workflow. *Don't forget to download the location of the UniProt ID mapping table!*
+To **include hit dereplication** at default settings (genome-based at 99% identity and 80% coverage), run the ``remote_struc_derep`` workflow. *Don't forget to download the UniProt ID mapping table!*
 
 .. code-block:: bash
 
@@ -33,7 +33,7 @@ To **include hit dereplication** at default settings (genome-based at 99% identi
 
 	csuite remote_seq -q <query-fasta>
 
-To **include a region-based hit dereplication** with sequence margins of 5 kb, run the ``remote_seq_derep`` workflow with the additional non-default dereplication settings.
+To **include a region-based hit dereplication** with flanking regions of 5 kb, run the ``remote_seq_derep`` workflow with the additional non-default dereplication settings.
 
 .. code-block:: bash
 
@@ -51,7 +51,7 @@ Local searches
 
 **Local structure-based searches** may still require some time- and resource-intensive tasks to be done beforehand. These may include generating a target protein structure database from your sequence database using ProstT5, and/or preclustering your target sequence database using MMseqs2.
 
-For example, to run a local structure-based search against a preclustered sequence database, you need to execute a MMseqs2 clustering and then generate protein structures for the sequence cluster representatives using ProstT5 via FoldSeek.
+For example, to run a local structure-based search against a preclustered sequence database, you need to execute an MMseqs2 clustering and then generate protein structures for the sequence cluster representatives using ProstT5 via FoldSeek.
 
 .. tip::
 
@@ -112,4 +112,15 @@ To extract all cluster Genbanks from a **local search** session into a folder `c
 	csuite local_extract -s <session-file> -o clusters -gb <local-genome-genbanks>
 
 For more specifics on the filtering options, have a look at the `cfoldseeker-seqs documentation <https://cfoldseeker.readthedocs.io/en/latest/guide/usage.html#extracting-gene-clusters>`_.
+
+
+Merging sessions
+----------------
+A set of existing sessions can be merged into a single one, renumbering the contained hits by cluster score in the new union set. For the merging, it relies on cblaster's ``Session.from_files`` class method. This workflow is meant to merge sessions targeting different databases using identical parameters, but in principle should work for any session as long as the query remains identical (search modes can even be mixed). **However, keep in mind that the merged session will only save the parameters of the first session!**
+
+To merge three sessions `session1.json`, `session2.json`, and `session3.json` into a merged session `merged.json`, run
+
+.. code-block:: bash
+
+	csuite merge -s session1.json session2.json session3.json -o merged.json
 

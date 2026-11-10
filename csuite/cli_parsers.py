@@ -839,3 +839,39 @@ def register_local_extract_subparser(subparsers):
     
     return None
 
+
+def register_merge_subparser(subparsers):
+    """
+    Register the subparser for the session merge workflow.
+    
+    Args:
+        subparsers (argparse.add_subparsers): Argparse action object that will register the new subparser upon calling.
+        
+    Returns:
+        None
+        
+    Note:
+        Argument names are prefixed with the codenames of the tools that require them, using $ as delimiter.
+    """
+    parser = subparsers.add_parser('merge', add_help = False,
+                                   help = "merge existing session files")
+    
+    args_general = parser.add_argument_group('General')
+    args_general.add_argument('-f', '--force', dest = 'MAIN$force',
+                              default = False, action = 'store_true', 
+                              help = "Force overwriting output (default: false).")
+    args_general.add_argument('-vv', '--verbosity', dest = 'MAIN$verbosity', metavar= 'verbosity',
+                              default = 3, type = int, choices = [0,1,2,3,4],
+                              help = "Console verbosity level (default: 3 (info))")
+    args_general.add_argument('-h', '--help', action = 'help', help = "Show this help message and exit")
+    
+    args_io = parser.add_argument_group('File inputs and outputs')
+    args_io.add_argument('-s', '--sessions', dest = "MERGE$sessions", metavar = "sessions",
+                         type = Path, required = True, nargs = '+',
+                         help = "Filepaths of the sessions to be merged (space-separated; e.g. 'path1 path2 path3').")
+    args_io.add_argument('-o', '--output', dest = 'MERGE$output', metavar = "output",
+                         type = Path, default = Path('merged_session.json'),
+                         help = 'Output path for merged session file (default: merged_session.json).')
+    
+    return None
+

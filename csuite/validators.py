@@ -220,3 +220,36 @@ def validate_remote_extract_args(args: argparse.Namespace) -> dict:
     # Parse and return
     return vars(args)
 
+
+def validate_merge_args(args: argparse.Namespace) -> dict:
+    """
+    Validate the arguments of the session merge module.
+    
+    Args:
+        args (argparse.Namespace): Argument namespace to be validated and parsed.
+        
+    Returns:
+        parsed_args (dict): dictionary of argument name-value pairs    
+    """
+    try:
+        # Every session file should exist
+        for session_file in args.sessions:
+            if not session_file.is_file():
+                raise IOError(f'Session file {str(session_file)} does not exist.')
+        # Output file cannot exist yet unless force flag is on.
+        if args.output.is_file():
+            if args.force:
+                LOG.warning('Output file already exists, but it will be overwritten.')
+            else:
+                msg = 'Output file already exists! Rerun with -f to overwrite it.'
+                LOG.error(msg)
+                raise FileExistsError(msg)
+        else:
+            # Create any missing directory
+            args.output.parent.mkdir(parents = True, exist_ok = True)
+    except (IOError, FileExistsError) as err:
+        raise err
+
+    # Parse and return        
+    return vars(args)
+

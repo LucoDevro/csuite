@@ -1,5 +1,5 @@
 {% set name = "csuite" %}
-{% set version = "0.1.0" %}
+{% set version = "0.2.0" %}
 
 package:
   name: "{{ name|lower }}"
@@ -25,9 +25,9 @@ requirements:
     - setuptools
   run:
     - python >=3.12
-    - cblaster <=1.4.0
-    - cagecleaner >=1.5.2
-    - cfoldseeker >=0.2.0
+    - cblaster ==1.4.0
+    - cagecleaner >=1.6.0
+    - cfoldseeker >=0.3.0
 
 test:
   commands:

@@ -17,7 +17,8 @@ from csuite.cli_parsers import (register_local_struc_derep_subparser,
                                 register_local_seq_subparser,
                                 register_local_seq_derep_subparser,
                                 register_remote_extract_subparser,
-                                register_local_extract_subparser
+                                register_local_extract_subparser,
+                                register_merge_subparser,
                                 )
 from csuite.argument_parsers import categorise_args
 from csuite.workflows import setup_workflow, run_workflow
@@ -102,6 +103,9 @@ def create_main_parser():
     
     # extract sequences from a local search
     register_local_extract_subparser(subparsers)
+    
+    # merge sessions
+    register_merge_subparser(subparsers)
     
     return parser
 

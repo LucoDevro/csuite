@@ -45,6 +45,8 @@ class cfoldseekerDefaultConfiguration():
         self.local_db_path = Path('local_db/local_db')
         self.cds_db_path = Path('local_cds_db.gz')
         self.seq_clusters = Path('cluster_clustered.tsv')
+        self.reuse_search = None
+        self.gpu = False
         
 
 class cfoldseekerCDSDefaultConfiguration():
@@ -88,9 +90,9 @@ class CAGEcleanerDefaultConfiguration():
         self.coverage = 80.0
         self.low_mem = False
         self.margin = 0
-        self.strict_regions = False
-        self.no_recovery_by_content = False
-        self.no_recovery_by_score = False
+        self.strict_regions = True
+        self.recover_content = False
+        self.recover_score = False
         self.zscore_outlier_threshold = 2.0
         self.minimal_score_difference = 0.1
         
@@ -102,7 +104,17 @@ class mainDefaultConfiguration():
     def __init__(self):
         self.output = Path('.')
         self.temp = Path(tempfile.gettempdir())
-    
+        self.verbosity = 3
+        self.force = False
+        
+        
+class mergeDefaultConfiguration():
+    """
+    Data class for the default argument values of the session merge workflow.
+    """
+    def __init__(self):
+        self.output = Path('merged_session.json')
+
 
 class reportDefaultConfiguration():
     """
@@ -158,7 +170,7 @@ class cblasterSearchDefaultConfiguration():
         self.recompute = False
         self.blast_file = None
         self.ipg_file = None
-        self.hitlist_size = 2000
+        self.hitlist_size = 1e9
         self.cpus = 1
         self.intermediate_genes = False
         self.intermediate_gene_distance = 5000
