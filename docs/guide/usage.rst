@@ -113,3 +113,14 @@ To extract all cluster Genbanks from a **local search** session into a folder `c
 
 For more specifics on the filtering options, have a look at the `cfoldseeker-seqs documentation <https://cfoldseeker.readthedocs.io/en/latest/guide/usage.html#extracting-gene-clusters>`_.
 
+
+Merging sessions
+----------------
+A set of existing sessions can be merged into a single one, renumbering the contained hits by cluster score in the new union set. For the merging, it relies on cblaster's ``Session.from_files`` class method. This workflow is meant to merge sessions targeting different databases using identical parameters, but in principle should work for any session as long as the query remains identical (search modes can even be mixed). **However, keep in mind that the merged session will only save the parameters of the first session!**
+
+To merge three sessions `session1.json`, `session2.json`, and `session3.json` into a merged session `merged.json`, run
+
+.. code-block:: bash
+
+	csuite merge -s session1.json session2.json session3.json -o merged.json
+

@@ -21,7 +21,7 @@ csuite
    :target: https://anaconda.org/bioconda/csuite
 
 .. |docker| image:: https://img.shields.io/docker/v/lucodevro/csuite?sort=semver&label=docker&logo=docker
-   :target: https://hub.docker.com/r/lucodevro/csuite
+   :target: https://quay.io/repository/biocontainers/csuite
 
 .. |pypi| image:: https://img.shields.io/pypi/v/csuite?sort=semver&logo=pypi
    :target: https://pypi.org/project/csuite/
@@ -80,6 +80,9 @@ The **csuite** currently supports the workflows listed below.
 	- Generate cluster Genbank files for an existing session using ``cblaster extract_clusters``
 12. ``local_extract``: Export cluster Genbank files from a local mode search session
 	- Generate cluster Genbank files for an existing session using ``cfoldseeker-seqs``
+13. ``merge``: Merge existing search sessions into one
+	- Merge sessions using ``cblaster`` Session class method
+	- Rerank by cluster score
 
 References and citations
 =========================
